@@ -34,6 +34,8 @@ jobs:
       - name: Test
         run: yarn test --ci --coverage --maxWorkers=2
         env:
+          TEST_LOGIN: ${{ secrets.TEST_LOGIN }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           CI: true
 
       - name: Build

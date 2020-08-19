@@ -1,7 +1,12 @@
-import { sum } from '../src';
+import YandexDiskClient from '../src';
 
 describe('blah', () => {
   it('works', () => {
-    expect(sum(1, 1)).toEqual(2);
+    const client = new YandexDiskClient(process.env.TEST_LOGIN, process.env.TEST_PASSWORD);
+    
+
+    const loginResult = client.logIn();
+
+    expect(loginResult).toEqual(true);
   });
 });
