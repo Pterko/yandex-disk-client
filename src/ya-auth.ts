@@ -15,7 +15,7 @@ export default {
       'https://passport.yandex.ru/auth'
     );
 
-    if (client.fileLogging){
+    if (client.fileLogging) {
       fs.writeFileSync('../logs/preauth.html', result.body);
     }
 
@@ -61,7 +61,7 @@ export default {
       }
     );
 
-    if (client.fileLogging){
+    if (client.fileLogging) {
       fs.writeFileSync('../logs/YadAuthLoginRequest.html', result.body);
     }
 
@@ -87,7 +87,7 @@ export default {
       }
     );
 
-    if (client.fileLogging){
+    if (client.fileLogging) {
       fs.writeFileSync('../logs/YadAuthPasswordRequest.html', result.body);
     }
 
@@ -107,7 +107,7 @@ export default {
       }
     );
 
-    if (client.fileLogging){
+    if (client.fileLogging) {
       fs.writeFileSync('../logs/YadAuthAccountsRequest.html', result.body);
     }
 
@@ -134,7 +134,7 @@ export default {
       }
     );
 
-    if (client.fileLogging){
+    if (client.fileLogging) {
       fs.writeFileSync('../logs/YadAuthDiskSkRequest.html', result.body);
     }
 

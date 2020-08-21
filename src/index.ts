@@ -16,7 +16,11 @@ class YandexDiskClient {
   public httpClient: Got;
   public fileLogging = false;
 
-  constructor(login: string, password: string, options?: { phone: string, fileLogging: boolean }) {
+  constructor(
+    login: string,
+    password: string,
+    options?: { phone: string; fileLogging: boolean }
+  ) {
     this.login = login;
     this.password = password;
     if (options?.phone) {
@@ -38,9 +42,7 @@ class YandexDiskClient {
   }
 
   async logIn() {
-    console.log(
-      `Logging in using login ${this.login}`
-    );
+    console.log(`Logging in using login ${this.login}`);
 
     const preauthResult = await YaAuth.YadPreAuthRequest(this);
     console.log('preauth result: ', preauthResult);

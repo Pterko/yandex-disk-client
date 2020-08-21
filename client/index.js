@@ -9,7 +9,7 @@ console.log(YandexDiskClient)
 
 
 async function start(){
-  const client = new YandexDiskClient(creds.login, creds.password);
+  const client = new YandexDiskClient(creds.login, creds.password, {fileLogging: true});
 
   console.log('client', client);
   
