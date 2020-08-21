@@ -13,32 +13,29 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Use cached node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            nodeModules-
-
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm install
         env:
           CI: true
 
       - name: Lint
-        run: yarn lint
+        run: npm run lint
         env:
           CI: true
 
       - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
+        run: npm run test --ci --coverage --maxWorkers=2
         env:
           TEST_LOGIN: ${{ secrets.TEST_LOGIN }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           CI: true
 
       - name: Build
-        run: yarn build
+        run: npm run build
         env:
           CI: true
+
+      - name: Publish
+        run: npm publish && true
+        env:
+         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

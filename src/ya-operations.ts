@@ -1,21 +1,26 @@
 import crypto from 'crypto';
 import md5 from 'md5';
 import YandexDiskClient from './index';
+import { Got } from 'got/dist/source';
+import { wait } from './utils';
 
-// TODO: implement deleting of ending slash
 const mergePath = (path: string) => {
-  if (path.startsWith('/')) {
-    return '/disk' + path;
+  const newPath = path.endsWith('/')
+    ? path.substring(0, path.length - 1)
+    : path;
+
+  if (newPath.startsWith('/')) {
+    return '/disk' + newPath;
   } else {
-    return '/disk/' + path;
+    return '/disk/' + newPath;
   }
 };
 
-export default {
+const YaOperations = {
   async getFolderInfo(client: YandexDiskClient, path: string) {
     console.log('getFolderInfo');
 
-    const result = await client.httpClient.post(
+    const result: any = await client.httpClient.post(
       'https://disk.yandex.ru/models/?_m=resources',
       {
         form: {
@@ -29,12 +34,13 @@ export default {
           'offset.0': 0,
           'withParent.0': 1,
         },
+        responseType: 'json',
       }
     );
 
     console.log(result.body);
 
-    return result.body;
+    return result.body?.models[0];
   },
 
   async getFileUrl(client: YandexDiskClient, path: string) {
@@ -185,4 +191,118 @@ export default {
 
     return true;
   },
+
+  async deleteFile(client: YandexDiskClient, path: string) {
+    console.log('deleteFile');
+
+    const deleteFileResult = await client.httpClient.post(
+      'https://disk.yandex.ru/models/?_m=do-resource-delete',
+      {
+        headers: {
+          Referer:
+            'https://disk.yandex.ru/client/disk?source=landing2_signin_ru',
+        },
+        form: {
+          idClient: client.idClient,
+          sk: client.skToken,
+          '_model.0': 'do-resource-delete',
+          'id.0': mergePath(path),
+          'force.0': 1,
+        },
+      }
+    );
+
+    console.log(deleteFileResult.body);
+
+    return true;
+  },
+
+  async cleanTrash(client: YandexDiskClient) {
+    console.log('cleanTrash');
+
+    const deleteFileResult: any = await client.httpClient.post(
+      'https://disk.yandex.ru/models/?_m=do-clean-trash',
+      {
+        headers: {
+          Referer: 'https://disk.yandex.ru/client/trash',
+        },
+        form: {
+          idClient: client.idClient,
+          sk: client.skToken,
+          '_model.0': 'do-clean-trash',
+        },
+        responseType: 'json',
+      }
+    );
+
+    console.log(deleteFileResult.body);
+
+    const operationId = deleteFileResult?.body?.models[0]?.data?.oid;
+
+    if (operationId) {
+      const getOperationStatus = async (
+        httpClient: Got,
+        operationId: string
+      ) => {
+        const operationResult: any = await httpClient.post(
+          'https://disk.yandex.ru/models/?_m=do-status-operation',
+          {
+            headers: {
+              Referer: 'https://disk.yandex.ru/client/trash',
+            },
+            form: {
+              idClient: client.idClient,
+              sk: client.skToken,
+              '_model.0': 'do-status-operation',
+              'oid.0': operationId,
+            },
+            responseType: 'json',
+          }
+        );
+
+        return operationResult.body;
+      };
+
+      let currentOperationResult = await getOperationStatus(
+        client.httpClient,
+        operationId
+      );
+
+      let currentOperationStatus =
+        currentOperationResult?.models[0]?.data?.status;
+
+      if (!currentOperationStatus) {
+        console.log('Error happened:', currentOperationResult);
+        return false;
+      }
+
+      console.log('Current status: ', currentOperationStatus);
+
+      while (['EXECUTING', 'WAITING'].includes(currentOperationStatus)) {
+        await wait(1000);
+
+        currentOperationResult = await getOperationStatus(
+          client.httpClient,
+          operationId
+        );
+
+        currentOperationStatus =
+          currentOperationResult?.models[0]?.data?.status;
+
+        console.log('Current status: ', currentOperationStatus);
+
+        if (!currentOperationStatus) {
+          console.log('Error happened:', currentOperationResult);
+          return false;
+        }
+      }
+
+      return true;
+    } else {
+      console.log('Error happened: ', deleteFileResult);
+      return false;
+    }
+  },
 };
+
+export default YaOperations;

@@ -1,11 +1,14 @@
 {
-  "version": "0.1.0",
+  "version": "0.0.4",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md",
+    "package.json",
+    "package-lock.json"
   ],
   "engines": {
     "node": ">=10"
@@ -16,12 +19,14 @@
     "test": "tsdx test",
     "lint": "tsdx lint",
     "lintfix": "tsdx lint --fix",
-    "prepare": "tsdx build"
+    "prepare": "tsdx build",
+    "docs": "typedoc --out docs src",
+    "husky:pre-commit": "tsdx lint --fix && npm run docs"
   },
   "peerDependencies": {},
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "npm run husky:pre-commit"
     }
   },
   "prettier": {
@@ -32,16 +37,19 @@
   },
   "name": "yandex-disk-client",
   "author": "Pterko",
+  "description": "This is Javascript client for Yandex Disk service. It's designed to work in node.js environment and supports only login-password auth.",
   "module": "dist/yandex-disk-client.esm.js",
   "devDependencies": {
     "husky": "^4.2.5",
     "tsdx": "^0.13.2",
     "tslib": "^2.0.1",
+    "typedoc": "^0.18.0",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.47",
     "@types/md5": "^2.2.0",
+    "@types/tough-cookie": "^4.0.0",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "form-data": "^3.0.0",

@@ -1,9 +1,8 @@
 import got, { Got } from 'got';
+import { CookieJar } from 'tough-cookie';
 
 import YaAuth from './ya-auth';
 import YaOperations from './ya-operations';
-
-const { CookieJar } = require('tough-cookie');
 
 class YandexDiskClient {
   public login: string;
@@ -41,7 +40,14 @@ class YandexDiskClient {
     });
   }
 
-  async logIn() {
+  /**
+   * This method is used to perform a login into Yandex Drive.
+   *
+   *
+   * @returns boolean value that indicates successful or not successful login.
+   *
+   */
+  async logIn(): Promise<boolean> {
     console.log(`Logging in using login ${this.login}`);
 
     const preauthResult = await YaAuth.YadPreAuthRequest(this);
@@ -88,6 +94,14 @@ class YandexDiskClient {
 
   public async createFolder(path: string) {
     return YaOperations.createFolder(this, path);
+  }
+
+  public async deleteFile(path: string) {
+    return YaOperations.deleteFile(this, path);
+  }
+
+  public async cleanTrash() {
+    return YaOperations.cleanTrash(this);
   }
 }
 
