@@ -4,3 +4,4 @@ node_modules
 dist
 client/creds.json
 logs
+.env

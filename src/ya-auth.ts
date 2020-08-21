@@ -15,7 +15,9 @@ export default {
       'https://passport.yandex.ru/auth'
     );
 
-    fs.writeFileSync('../logs/preauth.html', result.body);
+    if (client.fileLogging){
+      fs.writeFileSync('../logs/preauth.html', result.body);
+    }
 
     const csrfRegexMatch = /data-csrf="(?<csrf>.*?)"/gm.exec(result.body);
 
@@ -59,7 +61,9 @@ export default {
       }
     );
 
-    fs.writeFileSync('../logs/YadAuthLoginRequest.html', result.body);
+    if (client.fileLogging){
+      fs.writeFileSync('../logs/YadAuthLoginRequest.html', result.body);
+    }
 
     console.log(result.body);
 
@@ -83,7 +87,9 @@ export default {
       }
     );
 
-    fs.writeFileSync('../logs/YadAuthPasswordRequest.html', result.body);
+    if (client.fileLogging){
+      fs.writeFileSync('../logs/YadAuthPasswordRequest.html', result.body);
+    }
 
     console.log(result.body);
 
@@ -101,7 +107,9 @@ export default {
       }
     );
 
-    fs.writeFileSync('../logs/YadAuthAccountsRequest.html', result.body);
+    if (client.fileLogging){
+      fs.writeFileSync('../logs/YadAuthAccountsRequest.html', result.body);
+    }
 
     console.log(result.body);
 
@@ -126,7 +134,9 @@ export default {
       }
     );
 
-    fs.writeFileSync('../logs/YadAuthDiskSkRequest.html', result.body);
+    if (client.fileLogging){
+      fs.writeFileSync('../logs/YadAuthDiskSkRequest.html', result.body);
+    }
 
     // console.log(result.body);
 

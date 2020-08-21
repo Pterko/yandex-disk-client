@@ -14,12 +14,17 @@ class YandexDiskClient {
   public idClient: string | undefined;
 
   public httpClient: Got;
+  public fileLogging = false;
 
-  constructor(login: string, password: string, options?: { phone: string }) {
+  constructor(login: string, password: string, options?: { phone: string, fileLogging: boolean }) {
     this.login = login;
     this.password = password;
     if (options?.phone) {
       this.phoneNumber = options?.phone;
+    }
+
+    if (options?.fileLogging) {
+      this.fileLogging = options?.fileLogging;
     }
 
     const cookieJar = new CookieJar();
@@ -34,7 +39,7 @@ class YandexDiskClient {
 
   async logIn() {
     console.log(
-      `Logging in using login ${this.login}, password ${this.password} and phone ${this.phoneNumber}`
+      `Logging in using login ${this.login}`
     );
 
     const preauthResult = await YaAuth.YadPreAuthRequest(this);
