@@ -17,6 +17,8 @@ async function start(){
   
   await client.logIn();
   
+  console.log('isLoggedIn:', client.isLoggedIn());
+
   await client.getFolder('/disk');
 
 
@@ -29,20 +31,20 @@ async function start(){
 
   // const fileBuf = fs.readFileSync('../test/test.png');
 
-  const randomBuf = crypto.randomBytes(100000);
+  // const randomBuf = crypto.randomBytes(100000);
 
-  await client.uploadFile(randomBuf, 'qweqwe.png');
+  // await client.uploadFile(randomBuf, 'qweqwe.png');
 
 
-  console.log('wait some time');
-  await wait(10000);
+  // console.log('wait some time');
+  // await wait(10000);
 
-  await client.deleteFile('qweqwe.png')
+  // await client.deleteFile('qweqwe.png')
 
-  console.log('wait some time');
-  await wait(10000);
+  // console.log('wait some time');
+  // await wait(10000);
 
-  await client.cleanTrash();
+  // await client.cleanTrash();
 
 }
 

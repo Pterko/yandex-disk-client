@@ -1,21 +1,25 @@
 import got, { Got } from 'got';
 import { CookieJar } from 'tough-cookie';
 
-import YaAuth from './ya-auth';
-import YaOperations from './ya-operations';
+import YaAuth from './ya/ya-auth';
+import YaResources from './ya/ya-resources';
+import GenericOptions from 'dto/genericOptions';
 
 class YandexDiskClient {
-  public login: string;
-  public password: string;
-  public phoneNumber: string | undefined;
+  private login: string;
+  private password: string;
+  private phoneNumber: string | undefined;
 
-  public skToken: string | undefined;
-  public idClient: string | undefined;
+  private skToken: string | undefined;
+  private idClient: string | undefined;
 
-  public httpClient: Got;
-  public fileLogging = false;
+  private httpClient: Got;
+  private fileLogging = false;
 
   private auth: YaAuth;
+  private yaResources?: YaResources;
+
+  private internalOptions?: GenericOptions;
 
   constructor(login: string, password: string, options?: GenericOptions) {
     this.login = login;
@@ -38,6 +42,7 @@ class YandexDiskClient {
     });
 
     this.auth = new YaAuth(this.login, this.password, this.httpClient, options);
+    this.internalOptions = options;
   }
 
   /**
@@ -74,33 +79,44 @@ class YandexDiskClient {
     this.skToken = diskSkResult.skToken;
     this.idClient = diskSkResult.idClient;
 
+    this.yaResources = new YaResources(
+      this.httpClient,
+      this.idClient,
+      this.skToken
+    );
+
     return true;
   }
 
+  public isLoggedIn(){
+    return !!(this.yaResources && this.skToken);
+  }
+
   public async getFolder(path: string) {
-    return YaOperations.getFolderInfo(this, path);
+    return this.yaResources?.getFolderInfo(path);
   }
 
   public async getFile(path: string) {
-    return YaOperations.getFileUrl(this, path);
+    return this.yaResources?.getFileUrl(path);
   }
 
   public async uploadFile(buffer: Buffer, path: string) {
-    return YaOperations.uploadFile(this, path, buffer);
+    return this.yaResources?.uploadFile(path, buffer);
   }
 
   public async createFolder(path: string) {
-    return YaOperations.createFolder(this, path);
+    return this.yaResources?.createFolder(path);
   }
 
   public async deleteFile(path: string) {
-    return YaOperations.deleteFile(this, path);
+    return this.yaResources?.deleteFile(path);
   }
 
   public async cleanTrash() {
-    return YaOperations.cleanTrash(this);
+    return this.yaResources?.cleanTrash();
   }
 }
+
 
 export default YandexDiskClient;
 module.exports = YandexDiskClient;

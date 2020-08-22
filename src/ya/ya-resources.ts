@@ -1,31 +1,29 @@
 import crypto from 'crypto';
 import md5 from 'md5';
-import YandexDiskClient from './index';
+
+import { mergePath, wait } from '../utils';
 import { Got } from 'got/dist/source';
-import { wait } from './utils';
 
-const mergePath = (path: string) => {
-  const newPath = path.endsWith('/')
-    ? path.substring(0, path.length - 1)
-    : path;
+class YaResourses {
+  private httpClient: Got;
+  private idClient: string;
+  private skToken: string;
 
-  if (newPath.startsWith('/')) {
-    return '/disk' + newPath;
-  } else {
-    return '/disk/' + newPath;
+  constructor(httpClient: Got, idClient: string, skToken: string) {
+    this.httpClient = httpClient;
+    this.idClient = idClient;
+    this.skToken = skToken;
   }
-};
 
-const YaOperations = {
-  async getFolderInfo(client: YandexDiskClient, path: string) {
+  async getFolderInfo(path: string) {
     console.log('getFolderInfo');
 
-    const result: any = await client.httpClient.post(
+    const result: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=resources',
       {
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'resources',
           'sort.0': 'size',
           'order.0': 1,
@@ -41,17 +39,17 @@ const YaOperations = {
     console.log(result.body);
 
     return result.body?.models[0];
-  },
+  }
 
-  async getFileUrl(client: YandexDiskClient, path: string) {
+  async getFileUrl(path: string) {
     console.log('getFileUrl');
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-get-resource-url',
       {
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'do-get-resource-url',
           'id.0': mergePath(path),
         },
@@ -68,9 +66,9 @@ const YaOperations = {
     }
 
     throw new Error('File link not found');
-  },
+  }
 
-  async uploadFile(client: YandexDiskClient, path: string, buffer: Buffer) {
+  async uploadFile(path: string, buffer: Buffer) {
     console.log('uploadFile');
 
     const calcMd5 = md5(buffer);
@@ -84,12 +82,12 @@ const YaOperations = {
 
     console.log('sha256', calcSHA256);
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-get-resource-url',
       {
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'do-resource-upload-url',
           'dst.0': mergePath(path),
           'force.0': 0,
@@ -129,7 +127,7 @@ const YaOperations = {
       const operationId = uploadData.data.oid;
 
       // upload file to url
-      const putResult = await client.httpClient.put(
+      const putResult = await this.httpClient.put(
         uploadData?.data?.upload_url,
         {
           headers: {
@@ -143,7 +141,7 @@ const YaOperations = {
 
       console.log('put:', putResult.statusCode);
 
-      const verifyResult = await client.httpClient.post(
+      const verifyResult = await this.httpClient.post(
         'https://disk.yandex.ru/models/?_m=do-status-operation',
         {
           headers: {
@@ -152,8 +150,8 @@ const YaOperations = {
             // 'X-Disk-Uploader-Wait-Complete-Upload': false
           },
           form: {
-            idClient: client.idClient,
-            sk: client.skToken,
+            idClient: this.idClient,
+            sk: this.skToken,
             '_model.0': 'do-status-operation',
             'oid.0': operationId,
           },
@@ -164,12 +162,12 @@ const YaOperations = {
     }
 
     return { success: true };
-  },
+  }
 
-  async createFolder(client: YandexDiskClient, path: string) {
+  async createFolder(path: string) {
     console.log('createFolder');
 
-    const createFolderResult = await client.httpClient.post(
+    const createFolderResult = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-create-folder',
       {
         headers: {
@@ -178,8 +176,8 @@ const YaOperations = {
           // 'X-Disk-Uploader-Wait-Complete-Upload': false
         },
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'do-resource-create-folder',
           'id.0': mergePath(path),
           'force.0': 1,
@@ -190,12 +188,12 @@ const YaOperations = {
     console.log(createFolderResult.body);
 
     return true;
-  },
+  }
 
-  async deleteFile(client: YandexDiskClient, path: string) {
+  async deleteFile(path: string) {
     console.log('deleteFile');
 
-    const deleteFileResult = await client.httpClient.post(
+    const deleteFileResult = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-delete',
       {
         headers: {
@@ -203,8 +201,8 @@ const YaOperations = {
             'https://disk.yandex.ru/client/disk?source=landing2_signin_ru',
         },
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'do-resource-delete',
           'id.0': mergePath(path),
           'force.0': 1,
@@ -215,20 +213,20 @@ const YaOperations = {
     console.log(deleteFileResult.body);
 
     return true;
-  },
+  }
 
-  async cleanTrash(client: YandexDiskClient) {
+  async cleanTrash() {
     console.log('cleanTrash');
 
-    const deleteFileResult: any = await client.httpClient.post(
+    const deleteFileResult: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-clean-trash',
       {
         headers: {
           Referer: 'https://disk.yandex.ru/client/trash',
         },
         form: {
-          idClient: client.idClient,
-          sk: client.skToken,
+          idClient: this.idClient,
+          sk: this.skToken,
           '_model.0': 'do-clean-trash',
         },
         responseType: 'json',
@@ -251,8 +249,8 @@ const YaOperations = {
               Referer: 'https://disk.yandex.ru/client/trash',
             },
             form: {
-              idClient: client.idClient,
-              sk: client.skToken,
+              idClient: this.idClient,
+              sk: this.skToken,
               '_model.0': 'do-status-operation',
               'oid.0': operationId,
             },
@@ -264,7 +262,7 @@ const YaOperations = {
       };
 
       let currentOperationResult = await getOperationStatus(
-        client.httpClient,
+        this.httpClient,
         operationId
       );
 
@@ -282,7 +280,7 @@ const YaOperations = {
         await wait(1000);
 
         currentOperationResult = await getOperationStatus(
-          client.httpClient,
+          this.httpClient,
           operationId
         );
 
@@ -302,7 +300,8 @@ const YaOperations = {
       console.log('Error happened: ', deleteFileResult);
       return false;
     }
-  },
-};
+  }
+}
 
-export default YaOperations;
+
+export default YaResourses;
