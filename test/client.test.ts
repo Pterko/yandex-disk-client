@@ -1,7 +1,6 @@
 import YandexDiskClient from '../src';
 require('dotenv').config();
 
-
 describe('YandexDriveClient', () => {
   it('successfully logins', async () => {
     console.log(`Received login is ${process.env.TEST_LOGIN}`);

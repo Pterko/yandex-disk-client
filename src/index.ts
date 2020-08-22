@@ -88,7 +88,7 @@ class YandexDiskClient {
     return true;
   }
 
-  public isLoggedIn(){
+  public isLoggedIn() {
     return !!(this.yaResources && this.skToken);
   }
 
@@ -116,7 +116,6 @@ class YandexDiskClient {
     return this.yaResources?.cleanTrash();
   }
 }
-
 
 export default YandexDiskClient;
 module.exports = YandexDiskClient;

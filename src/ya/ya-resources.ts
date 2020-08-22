@@ -303,5 +303,4 @@ class YaResourses {
   }
 }
 
-
 export default YaResourses;
