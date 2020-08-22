@@ -19,6 +19,7 @@
 * [deleteFile](yandexdiskclient.md#deletefile)
 * [getFile](yandexdiskclient.md#getfile)
 * [getFolder](yandexdiskclient.md#getfolder)
+* [getQuota](yandexdiskclient.md#getquota)
 * [isLoggedIn](yandexdiskclient.md#isloggedin)
 * [logIn](yandexdiskclient.md#login)
 * [uploadFile](yandexdiskclient.md#uploadfile)
@@ -29,7 +30,7 @@
 
 \+ **new YandexDiskClient**(`login`: string, `password`: string, `options?`: GenericOptions): *[YandexDiskClient](yandexdiskclient.md)*
 
-*Defined in [index.ts:22](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L22)*
+*Defined in [index.ts:23](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L23)*
 
 **Parameters:**
 
@@ -47,7 +48,7 @@ Name | Type |
 
 ▸ **cleanTrash**(): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:115](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L115)*
+*Defined in [index.ts:129](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L129)*
 
 **Returns:** *Promise‹undefined | false | true›*
 
@@ -57,7 +58,7 @@ ___
 
 ▸ **createFolder**(`path`: string): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:107](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L107)*
+*Defined in [index.ts:121](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L121)*
 
 **Parameters:**
 
@@ -73,7 +74,7 @@ ___
 
 ▸ **deleteFile**(`path`: string): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:111](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L111)*
+*Defined in [index.ts:125](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L125)*
 
 **Parameters:**
 
@@ -89,7 +90,7 @@ ___
 
 ▸ **getFile**(`path`: string): *Promise‹any›*
 
-*Defined in [index.ts:99](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L99)*
+*Defined in [index.ts:113](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L113)*
 
 **Parameters:**
 
@@ -105,7 +106,7 @@ ___
 
 ▸ **getFolder**(`path`: string): *Promise‹any›*
 
-*Defined in [index.ts:95](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L95)*
+*Defined in [index.ts:109](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L109)*
 
 **Parameters:**
 
@@ -117,11 +118,21 @@ Name | Type |
 
 ___
 
+###  getQuota
+
+▸ **getQuota**(): *Promise‹Quota›*
+
+*Defined in [index.ts:104](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L104)*
+
+**Returns:** *Promise‹Quota›*
+
+___
+
 ###  isLoggedIn
 
 ▸ **isLoggedIn**(): *boolean*
 
-*Defined in [index.ts:91](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L91)*
+*Defined in [index.ts:92](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L92)*
 
 **Returns:** *boolean*
 
@@ -131,7 +142,7 @@ ___
 
 ▸ **logIn**(): *Promise‹boolean›*
 
-*Defined in [index.ts:55](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L55)*
+*Defined in [index.ts:56](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L56)*
 
 This method is used to perform a login into Yandex Drive.
 
@@ -145,7 +156,7 @@ ___
 
 ▸ **uploadFile**(`buffer`: Buffer, `path`: string): *Promise‹undefined | object›*
 
-*Defined in [index.ts:103](https://github.com/Pterko/yandex-disk-client/blob/fa7802d/src/index.ts#L103)*
+*Defined in [index.ts:117](https://github.com/Pterko/yandex-disk-client/blob/7f47f98/src/index.ts#L117)*
 
 **Parameters:**
 

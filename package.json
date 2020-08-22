@@ -20,7 +20,7 @@
     "lint": "tsdx lint",
     "lintfix": "tsdx lint --fix",
     "prepare": "tsdx build",
-    "docs": "typedoc --plugin typedoc-plugin-markdown --excludePrivate --mode library --out docs src/index.ts ",
+    "docs": "typedoc --plugin typedoc-plugin-markdown --excludeNotExported --excludePrivate --mode library --out docs src/index.ts",
     "husky:pre-commit": "npm run lintfix"
   },
   "peerDependencies": {},

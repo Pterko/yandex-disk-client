@@ -3,7 +3,8 @@ import { CookieJar } from 'tough-cookie';
 
 import YaAuth from './ya/ya-auth';
 import YaResources from './ya/ya-resources';
-import GenericOptions from 'dto/genericOptions';
+import GenericOptions from 'interfaces/genericOptions';
+import Quota from 'interfaces/yandex/Quota';
 
 class YandexDiskClient {
   private login: string;
@@ -92,6 +93,19 @@ class YandexDiskClient {
     return !!(this.yaResources && this.skToken);
   }
 
+  private onlyLoggedInMethodWrapped(f: Function) :any{
+    if (this.isLoggedIn()){
+      return f();
+    } else {
+      throw new Error('This method is available only after login');
+    }
+  }
+
+  public async getQuota(): Promise<Quota>{
+    return this.onlyLoggedInMethodWrapped(() => this.yaResources?.getQuota())
+  }
+  
+
   public async getFolder(path: string) {
     return this.yaResources?.getFolderInfo(path);
   }
@@ -115,6 +129,8 @@ class YandexDiskClient {
   public async cleanTrash() {
     return this.yaResources?.cleanTrash();
   }
+
+
 }
 
 export default YandexDiskClient;

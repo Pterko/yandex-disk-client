@@ -3,6 +3,7 @@ import md5 from 'md5';
 
 import { mergePath, wait } from '../utils';
 import { Got } from 'got/dist/source';
+import Quota from 'interfaces/yandex/Quota';
 
 class YaResourses {
   private httpClient: Got;
@@ -300,6 +301,33 @@ class YaResourses {
       console.log('Error happened: ', deleteFileResult);
       return false;
     }
+  }
+
+  public async getQuota(): Promise<Quota> {
+    console.log('getQuota');
+
+    const result = await this.httpClient.post(
+      'https://disk.yandex.ru/models/?_m=space',
+      {
+        form: {
+          idClient: this.idClient,
+          sk: this.skToken,
+          '_model.0': 'space',
+          'locale.0': 'ru',
+        },
+        responseType: 'json',
+      }
+    );
+
+    const resultBody: any = result.body;
+
+    console.log(result.body);
+
+    if (resultBody?.models[0]?.data) {
+      return resultBody?.models[0]?.data;
+    }
+
+    throw new Error('File link not found');
   }
 }
 

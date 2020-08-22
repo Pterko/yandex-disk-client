@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Got } from 'got/dist/source';
-import GenericOptions from 'dto/genericOptions';
+import GenericOptions from 'interfaces/genericOptions';
 
 // INSPIRED BY yar229's CODE
 // https://github.com/yar229/WebDavMailRuCloud

@@ -19,6 +19,11 @@ async function start(){
   
   console.log('isLoggedIn:', client.isLoggedIn());
 
+
+  const quota = await client.getQuota();
+
+  console.log('quota', quota);
+
   await client.getFolder('/disk');
 
 
