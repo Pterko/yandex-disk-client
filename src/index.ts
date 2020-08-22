@@ -15,11 +15,9 @@ class YandexDiskClient {
   public httpClient: Got;
   public fileLogging = false;
 
-  constructor(
-    login: string,
-    password: string,
-    options?: { phone: string; fileLogging: boolean }
-  ) {
+  private auth: YaAuth;
+
+  constructor(login: string, password: string, options?: GenericOptions) {
     this.login = login;
     this.password = password;
     if (options?.phone) {
@@ -38,6 +36,8 @@ class YandexDiskClient {
       },
       cookieJar,
     });
+
+    this.auth = new YaAuth(this.login, this.password, this.httpClient, options);
   }
 
   /**
@@ -50,27 +50,24 @@ class YandexDiskClient {
   async logIn(): Promise<boolean> {
     console.log(`Logging in using login ${this.login}`);
 
-    const preauthResult = await YaAuth.YadPreAuthRequest(this);
+    const preauthResult = await this.auth.YadPreAuthRequest();
     console.log('preauth result: ', preauthResult);
 
-    const loginRequest = await YaAuth.YadAuthLoginRequest(
-      this,
+    const loginRequest = await this.auth.YadAuthLoginRequest(
       preauthResult.csrf,
       preauthResult.uuid
     );
 
-    const passwordRequest = await YaAuth.YadAuthPasswordRequest(
-      this,
+    const passwordRequest = await this.auth.YadAuthPasswordRequest(
       preauthResult.csrf,
       loginRequest.track_id
     );
 
-    const accountsRequest = await YaAuth.YadAuthAccountsRequest(
-      this,
+    const accountsRequest = await this.auth.YadAuthAccountsRequest(
       preauthResult.csrf
     );
 
-    const diskSkResult = await YaAuth.YadAuthDiskSkRequest(this);
+    const diskSkResult = await this.auth.YadAuthDiskSkRequest();
 
     console.log('diskSkResult', diskSkResult);
 

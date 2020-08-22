@@ -20,8 +20,8 @@
     "lint": "tsdx lint",
     "lintfix": "tsdx lint --fix",
     "prepare": "tsdx build",
-    "docs": "typedoc --out docs src",
-    "husky:pre-commit": "tsdx lint --fix && npm run docs"
+    "docs": "typedoc --mode file --out docs src ",
+    "husky:pre-commit": "npm run lintfix && npm run docs"
   },
   "peerDependencies": {},
   "husky": {

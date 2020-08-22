@@ -1,20 +1,38 @@
 import fs from 'fs';
-
-import YandexDiskClient from './index';
+import { Got } from 'got/dist/source';
 
 // INSPIRED BY yar229's CODE
 // https://github.com/yar229/WebDavMailRuCloud
 // https://github.com/yar229/WebDavMailRuCloud/blob/master/MailRuCloud/MailRuCloudApi/Base/Repos/YandexDisk/YadWeb/Requests/
 
-export default {
-  async YadPreAuthRequest(client: YandexDiskClient) {
+class YaAuth {
+  private httpClient: Got;
+  private fileLogging = false;
+
+  private login: string;
+  private password: string;
+
+  constructor(
+    login: string,
+    password: string,
+    httpClient: Got,
+    options?: GenericOptions
+  ) {
+    this.httpClient = httpClient;
+    this.login = login;
+    this.password = password;
+
+    if (options?.fileLogging) {
+      this.fileLogging = options.fileLogging;
+    }
+  }
+
+  async YadPreAuthRequest(): Promise<{ csrf: string; uuid: string }> {
     console.log('preauth');
 
-    const result = await client.httpClient.get(
-      'https://passport.yandex.ru/auth'
-    );
+    const result = await this.httpClient.get('https://passport.yandex.ru/auth');
 
-    if (client.fileLogging) {
+    if (this.fileLogging) {
       fs.writeFileSync('../logs/preauth.html', result.body);
     }
 
@@ -30,16 +48,12 @@ export default {
     } else {
       throw new Error('Error while parsing preauth data');
     }
-  },
+  }
 
-  async YadAuthLoginRequest(
-    client: YandexDiskClient,
-    csrf: string,
-    uuid: string
-  ) {
+  async YadAuthLoginRequest(csrf: string, uuid: string) {
     console.log('YadAuthLoginRequest');
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/multi_step/start',
       {
         headers: {
@@ -51,7 +65,7 @@ export default {
         form: {
           csrf_token: csrf,
           process_uuid: uuid,
-          login: client.login,
+          login: this.login,
           service: 'cloud',
           retpath: 'https://disk.yandex.ru?source=landing2_signin_ru',
           origin: 'disk_landing2_signin_ru',
@@ -60,45 +74,41 @@ export default {
       }
     );
 
-    if (client.fileLogging) {
+    if (this.fileLogging) {
       fs.writeFileSync('../logs/YadAuthLoginRequest.html', result.body);
     }
 
     console.log(result.body);
 
     return JSON.parse(result.body);
-  },
+  }
 
-  async YadAuthPasswordRequest(
-    client: YandexDiskClient,
-    csrf: string,
-    trackId: string
-  ) {
+  async YadAuthPasswordRequest(csrf: string, trackId: string) {
     console.log('YadAuthPasswordRequest');
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/multi_step/commit_password',
       {
         body: `csrf_token=${csrf}&track_id=${trackId}&password=${encodeURIComponent(
-          client.password
+          this.password
         )}`,
         // throwHttpErrors: false
       }
     );
 
-    if (client.fileLogging) {
+    if (this.fileLogging) {
       fs.writeFileSync('../logs/YadAuthPasswordRequest.html', result.body);
     }
 
     console.log(result.body);
 
     return JSON.parse(result.body);
-  },
+  }
 
-  async YadAuthAccountsRequest(client: YandexDiskClient, csrf: string) {
+  async YadAuthAccountsRequest(csrf: string) {
     console.log('YadAuthAccountsRequest');
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/accounts',
       {
         body: `csrf_token=${csrf}`,
@@ -106,19 +116,19 @@ export default {
       }
     );
 
-    if (client.fileLogging) {
+    if (this.fileLogging) {
       fs.writeFileSync('../logs/YadAuthAccountsRequest.html', result.body);
     }
 
     console.log(result.body);
 
     return JSON.parse(result.body);
-  },
+  }
 
-  async YadAuthDiskSkRequest(client: YandexDiskClient) {
+  async YadAuthDiskSkRequest() {
     console.log('YadAuthDiskSkRequest');
 
-    const result = await client.httpClient.post(
+    const result = await this.httpClient.post(
       'https://disk.yandex.ru/client/disk',
       {
         headers: {
@@ -133,7 +143,7 @@ export default {
       }
     );
 
-    if (client.fileLogging) {
+    if (this.fileLogging) {
       fs.writeFileSync('../logs/YadAuthDiskSkRequest.html', result.body);
     }
 
@@ -152,5 +162,7 @@ export default {
 
     throw new Error('Error while parsing SK token');
     // return JSON.parse(result.body);
-  },
-};
+  }
+}
+
+export default YaAuth;
