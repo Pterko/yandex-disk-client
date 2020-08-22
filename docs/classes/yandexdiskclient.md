@@ -29,7 +29,7 @@
 
 \+ **new YandexDiskClient**(`login`: string, `password`: string, `options?`: GenericOptions): *[YandexDiskClient](yandexdiskclient.md)*
 
-*Defined in [index.ts:22](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L22)*
+*Defined in [index.ts:22](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L22)*
 
 **Parameters:**
 
@@ -47,7 +47,7 @@ Name | Type |
 
 ▸ **cleanTrash**(): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:115](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L115)*
+*Defined in [index.ts:115](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L115)*
 
 **Returns:** *Promise‹undefined | false | true›*
 
@@ -57,7 +57,7 @@ ___
 
 ▸ **createFolder**(`path`: string): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:107](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L107)*
+*Defined in [index.ts:107](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L107)*
 
 **Parameters:**
 
@@ -73,7 +73,7 @@ ___
 
 ▸ **deleteFile**(`path`: string): *Promise‹undefined | false | true›*
 
-*Defined in [index.ts:111](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L111)*
+*Defined in [index.ts:111](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L111)*
 
 **Parameters:**
 
@@ -89,7 +89,7 @@ ___
 
 ▸ **getFile**(`path`: string): *Promise‹any›*
 
-*Defined in [index.ts:99](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L99)*
+*Defined in [index.ts:99](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L99)*
 
 **Parameters:**
 
@@ -105,7 +105,7 @@ ___
 
 ▸ **getFolder**(`path`: string): *Promise‹any›*
 
-*Defined in [index.ts:95](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L95)*
+*Defined in [index.ts:95](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L95)*
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **isLoggedIn**(): *boolean*
 
-*Defined in [index.ts:91](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L91)*
+*Defined in [index.ts:91](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L91)*
 
 **Returns:** *boolean*
 
@@ -131,7 +131,7 @@ ___
 
 ▸ **logIn**(): *Promise‹boolean›*
 
-*Defined in [index.ts:55](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L55)*
+*Defined in [index.ts:55](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L55)*
 
 This method is used to perform a login into Yandex Drive.
 
@@ -145,7 +145,7 @@ ___
 
 ▸ **uploadFile**(`buffer`: Buffer, `path`: string): *Promise‹undefined | object›*
 
-*Defined in [index.ts:103](https://github.com/Pterko/yandex-disk-client/blob/b1cdf02/src/index.ts#L103)*
+*Defined in [index.ts:103](https://github.com/Pterko/yandex-disk-client/blob/2c38565/src/index.ts#L103)*
 
 **Parameters:**
 
