@@ -3,6 +3,8 @@ import got from 'got';
 import YandexDiskClient from '../src';
 const crypto = require('crypto');
 
+jest.setTimeout(20000);
+
 require('dotenv').config();
 
 let globalClient: YandexDiskClient;
