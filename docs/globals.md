@@ -4,6 +4,8 @@
 
 ## Index
 
-### Classes
+### Modules
 
-* [YandexDiskClient](classes/yandexdiskclient.md)
+* ["index"](modules/_index_.md)
+* ["interfaces/yandex/Quota"](modules/_interfaces_yandex_quota_.md)
+* ["interfaces/yandex/Resouce"](modules/_interfaces_yandex_resouce_.md)

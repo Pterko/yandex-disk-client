@@ -1,6 +1,6 @@
 # Yandex Disk Client 
 
-[Docs](/docs/classes/yandexdiskclient.md)
+[Docs](/docs/modules/_index_.md)
 
 
 This is Javascript client for Yandex Disk service. It's designed to work in node.js environment and supports only login-password auth.

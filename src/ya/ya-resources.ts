@@ -3,6 +3,8 @@ import md5 from 'md5';
 
 import { mergePath, wait } from '../utils';
 import { Got } from 'got/dist/source';
+import GenericOptions from 'interfaces/genericOptions';
+import Resource from 'interfaces/yandex/Resouce';
 import Quota from 'interfaces/yandex/Quota';
 
 class YaResourses {
@@ -10,13 +12,18 @@ class YaResourses {
   private idClient: string;
   private skToken: string;
 
-  constructor(httpClient: Got, idClient: string, skToken: string) {
+  constructor(
+    httpClient: Got,
+    idClient: string,
+    skToken: string,
+    internalOptions?: GenericOptions
+  ) {
     this.httpClient = httpClient;
     this.idClient = idClient;
     this.skToken = skToken;
   }
 
-  async getFolderInfo(path: string) {
+  async getFolderResources(path: string): Promise<Resource[]> {
     console.log('getFolderInfo');
 
     const result: any = await this.httpClient.post(
@@ -39,11 +46,11 @@ class YaResourses {
 
     console.log(result.body);
 
-    return result.body?.models[0];
+    return result.body?.models[0]?.data?.resources || [];
   }
 
-  async getFileUrl(path: string) {
-    console.log('getFileUrl');
+  async getFileDownloadUrl(path: string) {
+    console.log('getFileDownloadUrl');
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-get-resource-url',
@@ -62,14 +69,17 @@ class YaResourses {
 
     console.log(result.body);
 
-    if (resultBody.models[0].data.file) {
-      return resultBody.models[0].data.file;
+    if (resultBody?.models[0]?.data?.file) {
+      return `https:${resultBody.models[0].data.file}`;
     }
 
     throw new Error('File link not found');
   }
 
-  async uploadFile(path: string, buffer: Buffer) {
+  async uploadFile(
+    path: string,
+    buffer: Buffer
+  ): Promise<{ status: string; error?: any; resource?: Resource }> {
     console.log('uploadFile');
 
     const calcMd5 = md5(buffer);
@@ -109,7 +119,7 @@ class YaResourses {
 
     if (uploadStatus === 'hardlinked') {
       console.log('Successful upload, this file was found on server');
-      return { success: true };
+      return { status: 'hardlinked' };
     }
 
     console.log('file wasnt presented on server, uploading it...');
@@ -156,16 +166,19 @@ class YaResourses {
             '_model.0': 'do-status-operation',
             'oid.0': operationId,
           },
+          responseType: 'json',
         }
       );
 
-      console.log('verifyResult', verifyResult.body);
+      const verJson: any = verifyResult.body;
+
+      return { status: 'stored', resource: verJson?.models[0]?.data?.resource };
     }
 
-    return { success: true };
+    throw new Error('Error while uploading: strange state!');
   }
 
-  async createFolder(path: string) {
+  async createFolder(path: string): Promise<boolean> {
     console.log('createFolder');
 
     const createFolderResult = await this.httpClient.post(
@@ -183,6 +196,7 @@ class YaResourses {
           'id.0': mergePath(path),
           'force.0': 1,
         },
+        responseType: 'json',
       }
     );
 

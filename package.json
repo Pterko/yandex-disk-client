@@ -1,5 +1,5 @@
 {
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "lint": "tsdx lint",
     "lintfix": "tsdx lint --fix",
     "prepare": "tsdx build",
-    "docs": "typedoc --plugin typedoc-plugin-markdown --excludeNotExported --excludePrivate --mode library --out docs src/index.ts",
+    "docs": "typedoc --plugin typedoc-plugin-markdown --hideSources --excludePrivate --gitRevision master --mode library --out docs src/index.ts src/interfaces/yandex/",
     "husky:pre-commit": "npm run lintfix"
   },
   "peerDependencies": {},

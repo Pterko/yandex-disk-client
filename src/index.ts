@@ -5,33 +5,27 @@ import YaAuth from './ya/ya-auth';
 import YaResources from './ya/ya-resources';
 import GenericOptions from 'interfaces/genericOptions';
 import Quota from 'interfaces/yandex/Quota';
+import Resource from 'interfaces/yandex/Resouce';
 
-class YandexDiskClient {
+
+export class YandexDiskClientAuth {
   private login: string;
   private password: string;
-  private phoneNumber: string | undefined;
+  private httpClient: Got;
+  private auth: YaAuth;
 
   private skToken: string | undefined;
   private idClient: string | undefined;
 
-  private httpClient: Got;
-  private fileLogging = false;
-
-  private auth: YaAuth;
-  private yaResources?: YaResources;
-
   private internalOptions?: GenericOptions;
 
-  constructor(login: string, password: string, options?: GenericOptions) {
+  constructor(
+    login: string,
+    password: string,
+    internalOptions?: GenericOptions
+  ) {
     this.login = login;
     this.password = password;
-    if (options?.phone) {
-      this.phoneNumber = options?.phone;
-    }
-
-    if (options?.fileLogging) {
-      this.fileLogging = options?.fileLogging;
-    }
 
     const cookieJar = new CookieJar();
     this.httpClient = got.extend({
@@ -42,17 +36,15 @@ class YandexDiskClient {
       cookieJar,
     });
 
-    this.auth = new YaAuth(this.login, this.password, this.httpClient, options);
-    this.internalOptions = options;
+    this.auth = new YaAuth(
+      this.login,
+      this.password,
+      this.httpClient,
+      internalOptions
+    );
+    this.internalOptions = internalOptions;
   }
 
-  /**
-   * This method is used to perform a login into Yandex Drive.
-   *
-   *
-   * @returns boolean value that indicates successful or not successful login.
-   *
-   */
   async logIn(): Promise<boolean> {
     console.log(`Logging in using login ${this.login}`);
 
@@ -79,56 +71,67 @@ class YandexDiskClient {
 
     this.skToken = diskSkResult.skToken;
     this.idClient = diskSkResult.idClient;
-
-    this.yaResources = new YaResources(
-      this.httpClient,
-      this.idClient,
-      this.skToken
-    );
-
     return true;
   }
 
-  public isLoggedIn() {
-    return !!(this.yaResources && this.skToken);
-  }
-
-  private onlyLoggedInMethodWrapped(f: Function): any {
-    if (this.isLoggedIn()) {
-      return f();
-    } else {
-      throw new Error('This method is available only after login');
+  getClientInstance(): YandexDiskClient {
+    if (this.skToken && this.idClient) {
+      return new YandexDiskClient(
+        this.httpClient,
+        this.skToken,
+        this.idClient,
+        this.internalOptions
+      );
     }
-  }
-
-  public async getQuota(): Promise<Quota> {
-    return this.onlyLoggedInMethodWrapped(() => this.yaResources?.getQuota());
-  }
-
-  public async getFolder(path: string) {
-    return this.yaResources?.getFolderInfo(path);
-  }
-
-  public async getFile(path: string) {
-    return this.yaResources?.getFileUrl(path);
-  }
-
-  public async uploadFile(buffer: Buffer, path: string) {
-    return this.yaResources?.uploadFile(path, buffer);
-  }
-
-  public async createFolder(path: string) {
-    return this.yaResources?.createFolder(path);
-  }
-
-  public async deleteFile(path: string) {
-    return this.yaResources?.deleteFile(path);
-  }
-
-  public async cleanTrash() {
-    return this.yaResources?.cleanTrash();
+    throw new Error('Not logged in');
   }
 }
 
-export default YandexDiskClient;
-module.exports = YandexDiskClient;
+export class YandexDiskClient {
+  private yaResources: YaResources;
+
+  constructor(
+    httpClient: Got,
+    skToken: string,
+    idClient: string,
+    internalOptions?: GenericOptions
+  ) {
+    this.yaResources = new YaResources(
+      httpClient,
+      idClient,
+      skToken,
+      internalOptions
+    );
+  }
+
+  public async getQuota(): Promise<Quota> {
+    return this.yaResources.getQuota();
+  }
+
+  public async getFolder(path: string): Promise<Resource[]> {
+    return this.yaResources.getFolderResources(path);
+  }
+
+  public async getFileDownloadUrl(path: string): Promise<string> {
+    return this.yaResources.getFileDownloadUrl(path);
+  }
+
+  public async uploadFile(
+    buffer: Buffer,
+    path: string
+  ): Promise<{ status: string; resource?: Resource }> {
+    return this.yaResources.uploadFile(path, buffer);
+  }
+
+  public async createFolder(path: string): Promise<boolean> {
+    return this.yaResources.createFolder(path);
+  }
+
+  public async deleteFile(path: string): Promise<boolean> {
+    return this.yaResources.deleteFile(path);
+  }
+
+  public async cleanTrash(): Promise<boolean> {
+    return this.yaResources.cleanTrash();
+  }
+}

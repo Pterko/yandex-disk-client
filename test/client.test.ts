@@ -1,9 +1,9 @@
 import got from 'got';
 
-import YandexDiskClient from '../src';
+import { YandexDiskClientAuth, YandexDiskClient } from '../src';
 const crypto = require('crypto');
 
-jest.setTimeout(20000);
+jest.setTimeout(30000);
 
 require('dotenv').config();
 
@@ -28,12 +28,16 @@ describe('YandexDriveClient', () => {
       const login: string = String(process.env.TEST_LOGIN);
       const password: string = String(process.env.TEST_PASSWORD);
 
-      const client = new YandexDiskClient(login, password);
-      const loginResult = await client.logIn();
+      const authClient = new YandexDiskClientAuth(login, password);
+      const loginResult = await authClient.logIn();
 
-      globalClient = client;
+      globalClient = authClient.getClientInstance();
+
+      console.log('globalClient:', globalClient);
 
       expect(loginResult).toEqual(true);
+    } else {
+      throw new Error('Error while passing auth creds to test');
     }
   });
 
@@ -43,9 +47,9 @@ describe('YandexDriveClient', () => {
 
     await globalClient.uploadFile(randomBuf, randomFileName);
 
-    const fileUrl = await globalClient.getFile(randomFileName);
+    const fileUrl = await globalClient.getFileDownloadUrl(randomFileName);
 
-    const fileResponse = await got.get('https:' + fileUrl, {
+    const fileResponse = await got.get(fileUrl, {
       responseType: 'buffer',
     });
 
