@@ -7,7 +7,6 @@ import GenericOptions from 'interfaces/genericOptions';
 import Quota from 'interfaces/yandex/Quota';
 import Resource from 'interfaces/yandex/Resouce';
 
-
 export class YandexDiskClientAuth {
   private login: string;
   private password: string;
