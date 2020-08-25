@@ -3,6 +3,11 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "homepage": "https://github.com/Pterko/yandex-disk-client",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/Pterko/yandex-disk-client.git"
+  },
   "files": [
     "dist",
     "src",
