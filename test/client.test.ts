@@ -61,4 +61,56 @@ describe('YandexDriveClient', () => {
 
     expect(buffDiff).toEqual(0);
   });
+
+  it('uploaded file exists in resource listing', async () => {
+    const randomBuf: Buffer = crypto.randomBytes(100);
+    const randomFileName = makeid(5) + '.png';
+
+    await globalClient.uploadFile(randomBuf, randomFileName);
+
+    const resources = await globalClient.getFolderResources('/');
+
+    const ourNewResource = resources.find(x => x.path.includes(randomFileName));
+
+    expect(ourNewResource).toBeDefined();
+    expect(ourNewResource?.id).toBeDefined();
+  });
+  it('duplicate file upload causes exception', async () => {
+    await expect(
+      (async () => {
+        const randomBuf: Buffer = crypto.randomBytes(100);
+        const randomFileName = makeid(5) + '.png';
+
+        await globalClient.uploadFile(randomBuf, randomFileName);
+        await globalClient.uploadFile(randomBuf, randomFileName);
+      })()
+    ).rejects.toThrow();
+  });
+  it('quota successfully returns', async () => {
+    const quota = await globalClient.getQuota();
+
+    expect(quota?.free).toBeGreaterThanOrEqual(0);
+  });
+
+  it('deleteAllResources works correctly', async () => {
+    const res = await globalClient.deleteAllResources();
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    const resources = await globalClient.getFolderResources('/');
+
+    expect(res).toBe(true);
+    expect(resources.length).toBe(0);
+  });
+
+  it('cleanTrash works correctly', async () => {
+    const res = await globalClient.cleanTrash();
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    const quota = await globalClient.getQuota();
+
+    expect(quota?.trash).toBe(0);
+    expect(res).toBe(true);
+  });
 });

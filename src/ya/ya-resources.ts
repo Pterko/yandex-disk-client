@@ -23,8 +23,12 @@ class YaResourses {
     this.skToken = skToken;
   }
 
-  async getFolderResources(path: string): Promise<Resource[]> {
+  async getFolderResources(
+    path: string,
+    { withParent = false }: { withParent?: boolean } = {}
+  ): Promise<Resource[]> {
     console.log('getFolderInfo');
+    console.log('withParent', withParent);
 
     const result: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=resources',
@@ -36,15 +40,25 @@ class YaResourses {
           'sort.0': 'size',
           'order.0': 1,
           'idContext.0': mergePath(path),
-          'amount.0': 40,
+          'amount.0': 100,
           'offset.0': 0,
-          'withParent.0': 1,
+          'withParent.0': withParent ? 1 : 0,
         },
         responseType: 'json',
       }
     );
 
     console.log(result.body);
+
+    // sometimes yandex ignores our `withParent` and still passes parent directory
+    if (!withParent) {
+      // console.log('resources before filter', result.body?.models[0]?.data?.resources)
+      return (
+        result.body?.models[0]?.data?.resources.filter((x: any) => {
+          return x.path !== mergePath(path) && x.id !== mergePath(path);
+        }) || []
+      );
+    }
 
     return result.body?.models[0]?.data?.resources || [];
   }
@@ -205,7 +219,7 @@ class YaResourses {
     return true;
   }
 
-  async deleteFile(path: string) {
+  async deleteResource(path: string) {
     console.log('deleteFile');
 
     const deleteFileResult = await this.httpClient.post(

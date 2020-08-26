@@ -86,6 +86,9 @@ export class YandexDiskClientAuth {
   }
 }
 
+/**
+ * This class should be received through `getClientInstance` method of `YandexDiskClientAuth` class. **Do not use this class directly!**
+ */
 export class YandexDiskClient {
   private yaResources: YaResources;
 
@@ -107,14 +110,19 @@ export class YandexDiskClient {
     return this.yaResources.getQuota();
   }
 
-  public async getFolder(path: string): Promise<Resource[]> {
+  /**
+   *   Returns an array of resources for a given folder.
+   */
+  public async getFolderResources(path: string): Promise<Resource[]> {
     return this.yaResources.getFolderResources(path);
   }
 
+  /** Returns a https link to requested file */
   public async getFileDownloadUrl(path: string): Promise<string> {
     return this.yaResources.getFileDownloadUrl(path);
   }
 
+  /** Used to upload buffer to yandex.disk */
   public async uploadFile(
     buffer: Buffer,
     path: string
@@ -122,15 +130,26 @@ export class YandexDiskClient {
     return this.yaResources.uploadFile(path, buffer);
   }
 
+  /** Used to create a folder. Don't support recursive creation. */
   public async createFolder(path: string): Promise<boolean> {
     return this.yaResources.createFolder(path);
   }
 
-  public async deleteFile(path: string): Promise<boolean> {
-    return this.yaResources.deleteFile(path);
+  /** Used to delete a resource. */
+  public async deleteResource(path: string): Promise<boolean> {
+    return this.yaResources.deleteResource(path);
   }
 
+  /** Use this method to clean trash (basket) of your yandex.disk */
   public async cleanTrash(): Promise<boolean> {
     return this.yaResources.cleanTrash();
+  }
+
+  public async deleteAllResources(): Promise<boolean> {
+    const rootResources = await this.yaResources.getFolderResources('/');
+    for (const resource of rootResources) {
+      await this.yaResources.deleteResource(resource.path);
+    }
+    return true;
   }
 }

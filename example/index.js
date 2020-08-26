@@ -4,9 +4,6 @@ const creds = require('./creds.json');
 
 const { YandexDiskClient, YandexDiskClientAuth } = require('../dist/yandex-disk-client.cjs.development.js');
 
-console.log(YandexDiskClient)
-console.log(YandexDiskClientAuth);
-
 function makeid(length) {
   var result = '';
   var characters =
@@ -28,20 +25,27 @@ async function start(){
 
   const client = authClass.getClientInstance();
 
-  const randomBuf = crypto.randomBytes(100000);
-  const randomFileName = makeid(5) + '.png';
+  const resources = await client.getFolderResources('/');
+  console.log('res', resources);
 
-  const result = await client.uploadFile(randomBuf, '111.png');
+  const quota = await client.getQuota();
 
-  console.log('result');
-  console.log(result);
+  console.log('quota', quota);
+
+  // const clean = await client.deleteAllResources();
+
+  // const randomBuf = crypto.randomBytes(100000);
+  // const randomFileName = makeid(5) + '.png';
+
+  // const result = await client.uploadFile(randomBuf, '111.png');
+
+  // console.log('result');
+  // console.log(result);
 
 
   setTimeout(() => {}, 10000000);
   
-  // const quota = await client.getQuota();
 
-  // console.log('quota', quota);
 
   // const client = new YandexDiskClient(creds.login, creds.password, {fileLogging: false});
 

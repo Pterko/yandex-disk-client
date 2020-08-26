@@ -2,6 +2,8 @@
 
 # Class: YandexDiskClient
 
+This class should be received through `getClientInstance` method of `YandexDiskClientAuth` class. **Do not use this class directly!**
+
 ## Hierarchy
 
 * **YandexDiskClient**
@@ -16,9 +18,10 @@
 
 * [cleanTrash](_index_.yandexdiskclient.md#cleantrash)
 * [createFolder](_index_.yandexdiskclient.md#createfolder)
-* [deleteFile](_index_.yandexdiskclient.md#deletefile)
+* [deleteAllResources](_index_.yandexdiskclient.md#deleteallresources)
+* [deleteResource](_index_.yandexdiskclient.md#deleteresource)
 * [getFileDownloadUrl](_index_.yandexdiskclient.md#getfiledownloadurl)
-* [getFolder](_index_.yandexdiskclient.md#getfolder)
+* [getFolderResources](_index_.yandexdiskclient.md#getfolderresources)
 * [getQuota](_index_.yandexdiskclient.md#getquota)
 * [uploadFile](_index_.yandexdiskclient.md#uploadfile)
 
@@ -45,6 +48,8 @@ Name | Type |
 
 ▸ **cleanTrash**(): *Promise‹boolean›*
 
+Use this method to clean trash (basket) of your yandex.disk
+
 **Returns:** *Promise‹boolean›*
 
 ___
@@ -52,6 +57,8 @@ ___
 ###  createFolder
 
 ▸ **createFolder**(`path`: string): *Promise‹boolean›*
+
+Used to create a folder. Don't support recursive creation.
 
 **Parameters:**
 
@@ -63,9 +70,19 @@ Name | Type |
 
 ___
 
-###  deleteFile
+###  deleteAllResources
 
-▸ **deleteFile**(`path`: string): *Promise‹boolean›*
+▸ **deleteAllResources**(): *Promise‹boolean›*
+
+**Returns:** *Promise‹boolean›*
+
+___
+
+###  deleteResource
+
+▸ **deleteResource**(`path`: string): *Promise‹boolean›*
+
+Used to delete a resource.
 
 **Parameters:**
 
@@ -81,6 +98,8 @@ ___
 
 ▸ **getFileDownloadUrl**(`path`: string): *Promise‹string›*
 
+Returns a https link to requested file
+
 **Parameters:**
 
 Name | Type |
@@ -91,9 +110,11 @@ Name | Type |
 
 ___
 
-###  getFolder
+###  getFolderResources
 
-▸ **getFolder**(`path`: string): *Promise‹[Resource](../interfaces/_interfaces_yandex_resouce_.resource.md)[]›*
+▸ **getFolderResources**(`path`: string): *Promise‹[Resource](../interfaces/_interfaces_yandex_resouce_.resource.md)[]›*
+
+  Returns an array of resources for a given folder.
 
 **Parameters:**
 
@@ -116,6 +137,8 @@ ___
 ###  uploadFile
 
 ▸ **uploadFile**(`buffer`: Buffer, `path`: string): *Promise‹object›*
+
+Used to upload buffer to yandex.disk
 
 **Parameters:**
 
