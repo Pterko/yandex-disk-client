@@ -21,6 +21,7 @@ function makeid(length: number) {
 }
 
 describe('YandexDriveClient', () => {
+
   it('successfully logins', async () => {
     console.log(`Received login is ${process.env.TEST_LOGIN}`);
 
@@ -75,6 +76,7 @@ describe('YandexDriveClient', () => {
     expect(ourNewResource).toBeDefined();
     expect(ourNewResource?.id).toBeDefined();
   });
+
   it('duplicate file upload causes exception', async () => {
     await expect(
       (async () => {
@@ -86,6 +88,7 @@ describe('YandexDriveClient', () => {
       })()
     ).rejects.toThrow();
   });
+
   it('quota successfully returns', async () => {
     const quota = await globalClient.getQuota();
 
@@ -113,4 +116,19 @@ describe('YandexDriveClient', () => {
     expect(quota?.trash).toBe(0);
     expect(res).toBe(true);
   });
+
+
+  it('recursive folder creation work', async () => {
+
+    const randomRecursivePath = `/${makeid(5)}/${makeid(5)}/${makeid(5)}/`;
+
+    await globalClient.createFolder(randomRecursivePath, {isRecursive: true});
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    const resource = await globalClient.getFolderResources(randomRecursivePath, { withParent: true });
+
+    expect(resource.length).toBeGreaterThanOrEqual(1);
+  })
+  
 });

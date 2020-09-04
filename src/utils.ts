@@ -1,7 +1,14 @@
 export const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-export const mergePath = (path: string) => {
+
+/**
+ * 
+ * @param path Input path that needed to be processed 
+ * 
+ * @returns {String} Processed string that starts with '/disk' prefix and don't have slash at end
+ */
+export const processPath = (path: string): string => {
   let addingPrefix = path.startsWith('/disk') ? '' : '/disk';
 
   const newPath = path.endsWith('/')

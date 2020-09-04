@@ -6,6 +6,7 @@ import YaResources from './ya/ya-resources';
 import GenericOptions from 'interfaces/genericOptions';
 import Quota from 'interfaces/yandex/Quota';
 import Resource from 'interfaces/yandex/Resouce';
+import { processPath } from './utils';
 
 export class YandexDiskClientAuth {
   private login: string;
@@ -113,8 +114,8 @@ export class YandexDiskClient {
   /**
    *   Returns an array of resources for a given folder.
    */
-  public async getFolderResources(path: string): Promise<Resource[]> {
-    return this.yaResources.getFolderResources(path);
+  public async getFolderResources(path: string, options = {withParent: false}): Promise<Resource[]> {
+    return this.yaResources.getFolderResources(path, options);
   }
 
   /** Returns a https link to requested file */
@@ -131,8 +132,45 @@ export class YandexDiskClient {
   }
 
   /** Used to create a folder. Don't support recursive creation. */
-  public async createFolder(path: string): Promise<boolean> {
-    return this.yaResources.createFolder(path);
+  public async createFolder(path: string, options = {isRecursive: false}): Promise<boolean> {
+    if (options.isRecursive){
+      const processedPath = processPath(path);
+      // we have a long path like '/disk/test/qwe/folder' and we need recursively test and create folders if needed
+      const parts: string[] = processedPath.split('/').filter( x => x.length > 0);
+
+      const testingPaths: string[] = [];
+
+      for (let i = 2; i <= parts.length; i++) {
+        testingPaths.push('/' + parts.slice(0, i).join('/'));
+      }
+
+      console.log('testingPaths', testingPaths);
+
+      for (const path of testingPaths){
+        try {
+          console.log('testing path:', path);
+          const isExists = await this.yaResources.getFolderResources(path, {withParent: true});
+          console.log('isExists', isExists);
+
+          if (isExists.length === 0){
+            const creationResult = await this.createFolder(path);
+            if (!creationResult){
+              return false;
+            }
+          }
+        } catch(ex){
+          console.log('catched exection:', ex);
+          const creationResult = await this.createFolder(path);
+          if (!creationResult){
+            return false;
+          }
+        }
+      }
+
+      return true;
+    } else {
+      return this.yaResources.createFolder(path);
+    }
   }
 
   /** Used to delete a resource. */

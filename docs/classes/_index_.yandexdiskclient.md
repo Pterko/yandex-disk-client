@@ -56,15 +56,19 @@ ___
 
 ###  createFolder
 
-▸ **createFolder**(`path`: string): *Promise‹boolean›*
+▸ **createFolder**(`path`: string, `options`: object): *Promise‹boolean›*
 
 Used to create a folder. Don't support recursive creation.
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`path` | string |
+▪ **path**: *string*
+
+▪`Default value`  **options**: *object*= {isRecursive: false}
+
+Name | Type | Default |
+------ | ------ | ------ |
+`isRecursive` | boolean | false |
 
 **Returns:** *Promise‹boolean›*
 
@@ -112,15 +116,19 @@ ___
 
 ###  getFolderResources
 
-▸ **getFolderResources**(`path`: string): *Promise‹[Resource](../interfaces/_interfaces_yandex_resouce_.resource.md)[]›*
+▸ **getFolderResources**(`path`: string, `options`: object): *Promise‹[Resource](../interfaces/_interfaces_yandex_resouce_.resource.md)[]›*
 
   Returns an array of resources for a given folder.
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`path` | string |
+▪ **path**: *string*
+
+▪`Default value`  **options**: *object*= {withParent: false}
+
+Name | Type | Default |
+------ | ------ | ------ |
+`withParent` | boolean | false |
 
 **Returns:** *Promise‹[Resource](../interfaces/_interfaces_yandex_resouce_.resource.md)[]›*
 

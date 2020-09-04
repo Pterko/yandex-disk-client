@@ -18,8 +18,10 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "*": ["src/*", "node_modules/*"]
+      "*": ["src/*", "node_modules/*"],
+      "tslib" : ["node_modules/tslib/tslib.d.ts"]
     },
+
     "jsx": "react",
     "esModuleInterop": true
   }

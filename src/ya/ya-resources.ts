@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import md5 from 'md5';
 
-import { mergePath, wait } from '../utils';
-import { Got } from 'got/dist/source';
+import { processPath, wait } from '../utils';
+import { Got } from 'got';
 import GenericOptions from 'interfaces/genericOptions';
 import Resource from 'interfaces/yandex/Resouce';
 import Quota from 'interfaces/yandex/Quota';
@@ -30,6 +30,10 @@ class YaResourses {
     console.log('getFolderInfo');
     console.log('withParent', withParent);
 
+    const proceededPath = processPath(path);
+
+    console.log('proceededPath', proceededPath);
+
     const result: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=resources',
       {
@@ -39,7 +43,7 @@ class YaResourses {
           '_model.0': 'resources',
           'sort.0': 'size',
           'order.0': 1,
-          'idContext.0': mergePath(path),
+          'idContext.0': proceededPath,
           'amount.0': 100,
           'offset.0': 0,
           'withParent.0': withParent ? 1 : 0,
@@ -48,19 +52,19 @@ class YaResourses {
       }
     );
 
-    console.log(result.body);
+    console.log(result.body?.models[0]?.data);
 
     // sometimes yandex ignores our `withParent` and still passes parent directory
     if (!withParent) {
       // console.log('resources before filter', result.body?.models[0]?.data?.resources)
       return (
         result.body?.models[0]?.data?.resources.filter((x: any) => {
-          return x.path !== mergePath(path) && x.id !== mergePath(path);
-        }) || []
+          return x.path !== processPath(path) && x.id !== processPath(path);
+        })
       );
     }
 
-    return result.body?.models[0]?.data?.resources || [];
+    return result.body?.models[0]?.data?.resources;
   }
 
   async getFileDownloadUrl(path: string) {
@@ -73,7 +77,7 @@ class YaResourses {
           idClient: this.idClient,
           sk: this.skToken,
           '_model.0': 'do-get-resource-url',
-          'id.0': mergePath(path),
+          'id.0': processPath(path),
         },
         responseType: 'json',
       }
@@ -114,7 +118,7 @@ class YaResourses {
           idClient: this.idClient,
           sk: this.skToken,
           '_model.0': 'do-resource-upload-url',
-          'dst.0': mergePath(path),
+          'dst.0': processPath(path),
           'force.0': 0,
           'size.0': buffer.byteLength,
           'md5.0': calcMd5,
@@ -193,7 +197,7 @@ class YaResourses {
   }
 
   async createFolder(path: string): Promise<boolean> {
-    console.log('createFolder');
+    console.log('createFolder', path);
 
     const createFolderResult = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-create-folder',
@@ -207,7 +211,7 @@ class YaResourses {
           idClient: this.idClient,
           sk: this.skToken,
           '_model.0': 'do-resource-create-folder',
-          'id.0': mergePath(path),
+          'id.0': processPath(path),
           'force.0': 1,
         },
         responseType: 'json',
@@ -233,7 +237,7 @@ class YaResourses {
           idClient: this.idClient,
           sk: this.skToken,
           '_model.0': 'do-resource-delete',
-          'id.0': mergePath(path),
+          'id.0': processPath(path),
           'force.0': 1,
         },
       }

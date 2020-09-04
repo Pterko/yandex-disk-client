@@ -1,8 +1,7 @@
-const fs = require('fs');
 const crypto = require('crypto');
 const creds = require('./creds.json');
 
-const { YandexDiskClient, YandexDiskClientAuth } = require('../dist/yandex-disk-client.cjs.development.js');
+const { YandexDiskClientAuth } = require('../dist/yandex-disk-client.cjs.development.js');
 
 function makeid(length) {
   var result = '';
@@ -25,19 +24,24 @@ async function start(){
 
   const client = authClass.getClientInstance();
 
-  const resources = await client.getFolderResources('/');
-  console.log('res', resources);
+  // const resources = await client.getFolderResources('/eqwewqewqewqewqewqeqwqwddwqdwqdwqdqw');
+  // console.log('res', resources);
 
-  const quota = await client.getQuota();
+  // const quota = await client.getQuota();
 
-  console.log('quota', quota);
+  // console.log('quota', quota);
+
+
+  await client.createFolder('/chipi11/store/123/data', {isRecursive: true});
+
+  // await client.createFolder('/chipi11');
 
   // const clean = await client.deleteAllResources();
 
   // const randomBuf = crypto.randomBytes(100000);
   // const randomFileName = makeid(5) + '.png';
 
-  // const result = await client.uploadFile(randomBuf, '111.png');
+  // const result = await client.uploadFile(randomBuf, '123/123/123/123/111.png');
 
   // console.log('result');
   // console.log(result);
