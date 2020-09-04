@@ -19,7 +19,7 @@ const wait = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
 
 
 async function start(){
-  const authClass = new YandexDiskClientAuth(creds.login, creds.password, {fileLogging: false})
+  const authClass = new YandexDiskClientAuth(creds.login, creds.password, {fileLogging: true})
 
   await authClass.logIn();
 

@@ -4,11 +4,11 @@
 [Docs](https://github.com/Pterko/yandex-disk-client/blob/master/docs/modules/_index_.md)
 
 
-This is Javascript client for Yandex Disk service. It's designed to work in node.js environment and supports only login-password auth.
+This is Node.js client for the Yandex Disk service. It's designed to work only in node.js environment and supports only login-password auth.
 
-Currently this module is under active developing, so feel free to fill issue if you need some feature or bugfix.
+Currently, this module is under active development, so feel free to fill an issue if you need some feature or you're experiencing some problem.
 
-Simple example of how to use this module: 
+A simple example of how to use this module: 
 ```javascript
 const { YandexDiskClientAuth } = require('yandex-disk-client');
 

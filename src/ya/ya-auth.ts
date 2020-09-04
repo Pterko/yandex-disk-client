@@ -37,9 +37,9 @@ class YaAuth {
       fs.writeFileSync('../logs/preauth.html', result.body);
     }
 
-    const csrfRegexMatch = /data-csrf="(?<csrf>.*?)"/gm.exec(result.body);
+    const csrfRegexMatch = /"csrf":"(?<csrf>.*?)"/gm.exec(result.body);
 
-    const processUUIDMatch = /process_uuid=(?<uuid>\S+?)"/gm.exec(result.body);
+    const processUUIDMatch = /"process_uuid":"(?<uuid>\S+?)"/gm.exec(result.body);
 
     if (csrfRegexMatch?.groups?.csrf && processUUIDMatch?.groups?.uuid) {
       return {
