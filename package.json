@@ -53,12 +53,9 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@types/crypto-js": "^3.1.47",
     "@types/md5": "^2.2.0",
     "@types/tough-cookie": "^4.0.0",
-    "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
-    "form-data": "^3.0.0",
     "got": "^11.6.0",
     "md5": "^2.3.0",
     "tough-cookie": "^4.0.0"
