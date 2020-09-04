@@ -114,7 +114,10 @@ export class YandexDiskClient {
   /**
    *   Returns an array of resources for a given folder.
    */
-  public async getFolderResources(path: string, options = {withParent: false}): Promise<Resource[]> {
+  public async getFolderResources(
+    path: string,
+    options = { withParent: false }
+  ): Promise<Resource[]> {
     return this.yaResources.getFolderResources(path, options);
   }
 
@@ -132,11 +135,16 @@ export class YandexDiskClient {
   }
 
   /** Used to create a folder. Don't support recursive creation. */
-  public async createFolder(path: string, options = {isRecursive: false}): Promise<boolean> {
-    if (options.isRecursive){
+  public async createFolder(
+    path: string,
+    options = { isRecursive: false }
+  ): Promise<boolean> {
+    if (options.isRecursive) {
       const processedPath = processPath(path);
       // we have a long path like '/disk/test/qwe/folder' and we need recursively test and create folders if needed
-      const parts: string[] = processedPath.split('/').filter( x => x.length > 0);
+      const parts: string[] = processedPath
+        .split('/')
+        .filter(x => x.length > 0);
 
       const testingPaths: string[] = [];
 
@@ -146,22 +154,24 @@ export class YandexDiskClient {
 
       console.log('testingPaths', testingPaths);
 
-      for (const path of testingPaths){
+      for (const path of testingPaths) {
         try {
           console.log('testing path:', path);
-          const isExists = await this.yaResources.getFolderResources(path, {withParent: true});
+          const isExists = await this.yaResources.getFolderResources(path, {
+            withParent: true,
+          });
           console.log('isExists', isExists);
 
-          if (isExists.length === 0){
+          if (isExists.length === 0) {
             const creationResult = await this.createFolder(path);
-            if (!creationResult){
+            if (!creationResult) {
               return false;
             }
           }
-        } catch(ex){
+        } catch (ex) {
           console.log('catched exection:', ex);
           const creationResult = await this.createFolder(path);
-          if (!creationResult){
+          if (!creationResult) {
             return false;
           }
         }

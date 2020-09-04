@@ -1,11 +1,10 @@
 export const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-
 /**
- * 
- * @param path Input path that needed to be processed 
- * 
+ *
+ * @param path Input path that needed to be processed
+ *
  * @returns {String} Processed string that starts with '/disk' prefix and don't have slash at end
  */
 export const processPath = (path: string): string => {

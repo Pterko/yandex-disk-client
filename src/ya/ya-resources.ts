@@ -57,11 +57,9 @@ class YaResourses {
     // sometimes yandex ignores our `withParent` and still passes parent directory
     if (!withParent) {
       // console.log('resources before filter', result.body?.models[0]?.data?.resources)
-      return (
-        result.body?.models[0]?.data?.resources.filter((x: any) => {
-          return x.path !== processPath(path) && x.id !== processPath(path);
-        })
-      );
+      return result.body?.models[0]?.data?.resources.filter((x: any) => {
+        return x.path !== processPath(path) && x.id !== processPath(path);
+      });
     }
 
     return result.body?.models[0]?.data?.resources;

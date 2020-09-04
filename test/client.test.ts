@@ -21,7 +21,6 @@ function makeid(length: number) {
 }
 
 describe('YandexDriveClient', () => {
-
   it('successfully logins', async () => {
     console.log(`Received login is ${process.env.TEST_LOGIN}`);
 
@@ -117,18 +116,18 @@ describe('YandexDriveClient', () => {
     expect(res).toBe(true);
   });
 
-
   it('recursive folder creation work', async () => {
-
     const randomRecursivePath = `/${makeid(5)}/${makeid(5)}/${makeid(5)}/`;
 
-    await globalClient.createFolder(randomRecursivePath, {isRecursive: true});
+    await globalClient.createFolder(randomRecursivePath, { isRecursive: true });
 
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    const resource = await globalClient.getFolderResources(randomRecursivePath, { withParent: true });
+    const resource = await globalClient.getFolderResources(
+      randomRecursivePath,
+      { withParent: true }
+    );
 
     expect(resource.length).toBeGreaterThanOrEqual(1);
-  })
-  
+  });
 });
