@@ -8,6 +8,7 @@ jest.setTimeout(30000);
 require('dotenv').config();
 
 let globalClient: YandexDiskClient;
+let globalAuthClient: YandexDiskClientAuth;
 
 function makeid(length: number) {
   var result = '';
@@ -31,6 +32,7 @@ describe('YandexDriveClient', () => {
       const authClient = new YandexDiskClientAuth(login, password);
       const loginResult = await authClient.logIn();
 
+      globalAuthClient = authClient;
       globalClient = authClient.getClientInstance();
 
       console.log('globalClient:', globalClient);
@@ -129,5 +131,24 @@ describe('YandexDriveClient', () => {
     );
 
     expect(resource.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('successfully logins trought auth object', async () => {
+    const login: string = String(process.env.TEST_LOGIN);
+    const password: string = String(process.env.TEST_PASSWORD);
+
+    const authJSON = globalAuthClient.getAuthObject();
+
+    const authClassFromJSON = new YandexDiskClientAuth(login, password, {
+      fileLogging: true,
+    });
+
+    await authClassFromJSON.loginTroughtAuthObject(authJSON);
+
+    const class2 = authClassFromJSON.getClientInstance();
+
+    const quota2 = await class2.getQuota();
+
+    expect(quota2).toBeDefined();
   });
 });

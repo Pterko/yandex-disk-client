@@ -16,6 +16,7 @@ export class YandexDiskClientAuth {
 
   private skToken: string | undefined;
   private idClient: string | undefined;
+  private CookieJar: CookieJar;
 
   private internalOptions?: GenericOptions;
 
@@ -27,14 +28,8 @@ export class YandexDiskClientAuth {
     this.login = login;
     this.password = password;
 
-    const cookieJar = new CookieJar();
-    this.httpClient = got.extend({
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
-      },
-      cookieJar,
-    });
+    this.CookieJar = new CookieJar();
+    this.httpClient = this.createHttpClientInstance(this.CookieJar);
 
     this.auth = new YaAuth(
       this.login,
@@ -43,6 +38,16 @@ export class YandexDiskClientAuth {
       internalOptions
     );
     this.internalOptions = internalOptions;
+  }
+
+  private createHttpClientInstance(CookieJar: CookieJar): Got {
+    return got.extend({
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
+      },
+      cookieJar: CookieJar,
+    });
   }
 
   async logIn(): Promise<boolean> {
@@ -84,6 +89,36 @@ export class YandexDiskClientAuth {
       );
     }
     throw new Error('Not logged in');
+  }
+
+  async loginTroughtAuthObject(authObject: {
+    skToken: string;
+    idClient: string;
+    cookieJar: any;
+  }): Promise<boolean> {
+    this.skToken = authObject.skToken;
+    this.idClient = authObject.idClient;
+    this.CookieJar = CookieJar.fromJSON(authObject.cookieJar);
+    this.httpClient = this.createHttpClientInstance(this.CookieJar);
+
+    // Now we need to test that given parameters are valid //
+    const tempClient = this.getClientInstance();
+
+    const res = await tempClient.getQuota();
+
+    return true;
+  }
+
+  getAuthObject(): {
+    skToken: string;
+    idClient: string;
+    cookieJar: any;
+  } {
+    return {
+      skToken: this.skToken || '',
+      idClient: this.idClient || '',
+      cookieJar: this.CookieJar.toJSON(),
+    };
   }
 }
 
