@@ -3,9 +3,9 @@ import md5 from 'md5';
 
 import { processPath, wait } from '../utils';
 import { Got } from 'got';
-import GenericOptions from 'interfaces/genericOptions';
-import Resource from 'interfaces/yandex/Resouce';
-import Quota from 'interfaces/yandex/Quota';
+import GenericOptions from '../interfaces/genericOptions';
+import Resource from '../interfaces/yandex/Resouce';
+import Quota from '../interfaces/yandex/Quota';
 
 class YaResourses {
   private httpClient: Got;

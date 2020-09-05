@@ -3,9 +3,9 @@ import { CookieJar } from 'tough-cookie';
 
 import YaAuth from './ya/ya-auth';
 import YaResources from './ya/ya-resources';
-import GenericOptions from 'interfaces/genericOptions';
-import Quota from 'interfaces/yandex/Quota';
-import Resource from 'interfaces/yandex/Resouce';
+import GenericOptions from './interfaces/genericOptions';
+import Quota from './interfaces/yandex/Quota';
+import Resource from './interfaces/yandex/Resouce';
 import { processPath } from './utils';
 
 export class YandexDiskClientAuth {

@@ -64,7 +64,7 @@ Used to create a folder. Don't support recursive creation.
 
 ▪ **path**: *string*
 
-▪`Default value`  **options**: *object*= {isRecursive: false}
+▪`Default value`  **options**: *object*= { isRecursive: false }
 
 Name | Type | Default |
 ------ | ------ | ------ |
@@ -124,7 +124,7 @@ ___
 
 ▪ **path**: *string*
 
-▪`Default value`  **options**: *object*= {withParent: false}
+▪`Default value`  **options**: *object*= { withParent: false }
 
 Name | Type | Default |
 ------ | ------ | ------ |
