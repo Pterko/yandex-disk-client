@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import md5 from 'md5';
 
 import { processPath, wait } from '../utils';
 import { Got } from 'got';
@@ -98,7 +97,10 @@ class YaResourses {
   ): Promise<{ status: string; error?: any; resource?: Resource }> {
     console.log('uploadFile');
 
-    const calcMd5 = md5(buffer);
+    const calcMd5 = crypto
+      .createHash('md5')
+      .update(buffer)
+      .digest('hex');
 
     console.log('md5', calcMd5);
 

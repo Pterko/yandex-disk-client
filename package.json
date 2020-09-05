@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -8,7 +8,11 @@
     "type": "git",
     "url": "https://github.com/Pterko/yandex-disk-client.git"
   },
-  "keywords": ["yandex", "yandex-disk", "yandex-disk-client"],
+  "keywords": [
+    "yandex",
+    "yandex-disk",
+    "yandex-disk-client"
+  ],
   "files": [
     "dist",
     "src",
@@ -58,7 +62,6 @@
     "@types/tough-cookie": "^4.0.0",
     "dotenv": "^8.2.0",
     "got": "^11.6.0",
-    "md5": "^2.3.0",
     "tough-cookie": "^4.0.0"
   }
 }
