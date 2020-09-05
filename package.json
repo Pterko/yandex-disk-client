@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -8,6 +8,7 @@
     "type": "git",
     "url": "https://github.com/Pterko/yandex-disk-client.git"
   },
+  "keywords": ["yandex", "yandex-disk", "yandex-disk-client"],
   "files": [
     "dist",
     "src",
