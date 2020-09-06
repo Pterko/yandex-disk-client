@@ -6,3 +6,4 @@ example/creds.json
 logs
 .env
 .vscode
+coverage
