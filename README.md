@@ -1,5 +1,5 @@
 # Yandex Disk Client 
-![Snyk Vulnerabilities for npm package version](https://img.shields.io/snyk/vulnerabilities/npm/yandex-disk-client?style=for-the-badge)    ![npm](https://img.shields.io/npm/dm/yandex-disk-client?style=for-the-badge)       ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/yandex-disk-client?style=for-the-badge)     ![](https://img.shields.io/npm/v/yandex-disk-client?style=for-the-badge) 
+![Snyk Vulnerabilities for npm package version](https://img.shields.io/snyk/vulnerabilities/npm/yandex-disk-client?style=for-the-badge)    ![npm](https://img.shields.io/npm/dm/yandex-disk-client?style=for-the-badge)       ![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/yandex-disk-client?style=for-the-badge)     ![](https://img.shields.io/npm/v/yandex-disk-client?style=for-the-badge)  ![Codecov](https://img.shields.io/codecov/c/github/pterko/yandex-disk-client?style=for-the-badge)
 
 [Docs](https://github.com/Pterko/yandex-disk-client/blob/master/docs/modules/_index_.md)
 

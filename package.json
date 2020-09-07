@@ -31,7 +31,7 @@
     "lintfix": "tsdx lint --fix",
     "prepare": "tsdx build",
     "docs": "typedoc --plugin typedoc-plugin-markdown --hideSources --excludePrivate --gitRevision master --mode library --out docs src/index.ts src/interfaces/yandex/",
-    "husky:pre-commit": "npm run lintfix"
+    "husky:pre-commit": ""
   },
   "peerDependencies": {},
   "husky": {
