@@ -235,4 +235,8 @@ export class YandexDiskClient {
     }
     return true;
   }
+
+  public async publishResource(path: string, type?: string) {
+    return this.yaResources.publishResource(path, type);
+  }
 }

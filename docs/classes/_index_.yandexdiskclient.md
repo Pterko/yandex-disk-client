@@ -23,6 +23,7 @@ This class should be received through `getClientInstance` method of `YandexDiskC
 * [getFileDownloadUrl](_index_.yandexdiskclient.md#getfiledownloadurl)
 * [getFolderResources](_index_.yandexdiskclient.md#getfolderresources)
 * [getQuota](_index_.yandexdiskclient.md#getquota)
+* [publishResource](_index_.yandexdiskclient.md#publishresource)
 * [uploadFile](_index_.yandexdiskclient.md#uploadfile)
 
 ## Constructors
@@ -139,6 +140,21 @@ ___
 ▸ **getQuota**(): *Promise‹[Quota](../interfaces/_interfaces_yandex_quota_.quota.md)›*
 
 **Returns:** *Promise‹[Quota](../interfaces/_interfaces_yandex_quota_.quota.md)›*
+
+___
+
+###  publishResource
+
+▸ **publishResource**(`path`: string, `type?`: undefined | string): *Promise‹object›*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`path` | string |
+`type?` | undefined &#124; string |
+
+**Returns:** *Promise‹object›*
 
 ___
 

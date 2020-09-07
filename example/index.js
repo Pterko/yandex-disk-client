@@ -32,16 +32,23 @@ async function start(){
   // console.log('quota', quota);
 
 
-  await client.createFolder('/chipi11/store/123/data', {isRecursive: true});
+  // await client.createFolder('/chipi11/store/123/data', {isRecursive: true});
 
   // await client.createFolder('/chipi11');
 
   // const clean = await client.deleteAllResources();
 
-  // const randomBuf = crypto.randomBytes(100000);
-  // const randomFileName = makeid(5) + '.png';
+  const randomBuf = crypto.randomBytes(100000);
+  const randomFileName = makeid(5) + '.png';
 
-  // const result = await client.uploadFile(randomBuf, '123/123/123/123/111.png');
+  const result = await client.uploadFile(randomBuf, randomFileName);
+
+  console.log('result of file upload:', randomFileName);
+
+  const share = await client.publishResource(randomFileName);
+
+  console.log('share: ', share);
+
 
   // console.log('result');
   // console.log(result);

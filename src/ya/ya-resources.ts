@@ -361,6 +361,44 @@ class YaResourses {
 
     throw new Error('File link not found');
   }
+
+  public async publishResource(
+    path: string,
+    type?: string
+  ): Promise<{
+    hash: string;
+    short_url: string;
+    short_url_named: string;
+    url: string;
+  }> {
+    console.log('publishResource');
+
+    const result = await this.httpClient.post(
+      'https://disk.yandex.ru/models/?_m=do-resource-publish',
+      {
+        form: {
+          idClient: this.idClient,
+          sk: this.skToken,
+          '_model.0': 'do-resource-publish',
+          'locale.0': 'ru',
+          'type.0': type || 'file',
+          'reverse.0': false,
+          'id.0': processPath(path),
+        },
+        responseType: 'json',
+      }
+    );
+
+    const resultBody: any = result.body;
+
+    console.log(result.body);
+
+    if (resultBody?.models[0]?.data) {
+      return resultBody?.models[0]?.data;
+    }
+
+    throw new Error('File link not found');
+  }
 }
 
 export default YaResourses;
