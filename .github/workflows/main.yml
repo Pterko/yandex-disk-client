@@ -31,6 +31,11 @@ jobs:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
           CI: true
 
+      - name: Upload Coverage
+        run: ./node_modules/.bin/codecov --token="$CODECOV_TOKEN"
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Build
         run: npm run build
         env:

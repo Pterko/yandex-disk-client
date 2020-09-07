@@ -50,6 +50,7 @@
   "description": "This is Javascript client for Yandex Disk service. It's designed to work in node.js environment and supports only login-password auth.",
   "module": "dist/yandex-disk-client.esm.js",
   "devDependencies": {
+    "codecov": "^3.7.2",
     "husky": "^4.2.5",
     "tsdx": "^0.13.3",
     "tslib": "^2.0.1",
