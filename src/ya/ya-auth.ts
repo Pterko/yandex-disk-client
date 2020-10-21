@@ -138,16 +138,16 @@ class YaAuth {
         headers: {
           Accept:
             'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'same-site',
-            'Sec-Fetch-User': '?1',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'same-site',
+          'Sec-Fetch-User': '?1',
           Referer:
             'https://passport.yandex.ru/auth/list?from=cloud&origin=disk_landing_web_signin_ru&retpath=https%3A%2F%2Fdisk.yandex.ru%2Fclient%2Fdisk&backpath=https%3A%2F%2Fdisk.yandex.ru&mode=edit',
         },
       }
     );
 
-    if (result.statusCode >= 400){
+    if (result.statusCode >= 400) {
       console.log(result.body);
       throw new Error('Something went wrong with YadAuthDiskSkRequest');
     }
