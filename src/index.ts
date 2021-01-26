@@ -51,10 +51,10 @@ export class YandexDiskClientAuth {
   }
 
   async logIn(): Promise<boolean> {
-    console.log(`Logging in using login ${this.login}`);
+    // console.log(`Logging in using login ${this.login}`);
 
     const preauthResult = await this.auth.YadPreAuthRequest();
-    console.log('preauth result: ', preauthResult);
+    // console.log('preauth result: ', preauthResult);
 
     const loginRequest = await this.auth.YadAuthLoginRequest(
       preauthResult.csrf,
@@ -72,7 +72,7 @@ export class YandexDiskClientAuth {
 
     const diskSkResult = await this.auth.YadAuthDiskSkRequest();
 
-    console.log('diskSkResult', diskSkResult);
+    // console.log('diskSkResult', diskSkResult);
 
     this.skToken = diskSkResult.skToken;
     this.idClient = diskSkResult.idClient;
@@ -169,6 +169,14 @@ export class YandexDiskClient {
     return this.yaResources.uploadFile(path, buffer);
   }
 
+  /** Used to upload buffer to yandex.disk */
+  public async uploadFileStream(
+    stream: ReadableStream,
+    path: string
+  ): Promise<{ status: string; resource?: Resource }> {
+    return this.yaResources.uploadFileStream(path, stream);
+  }
+
   /** Used to create a folder. Don't support recursive creation. */
   public async createFolder(
     path: string,
@@ -187,15 +195,15 @@ export class YandexDiskClient {
         testingPaths.push('/' + parts.slice(0, i).join('/'));
       }
 
-      console.log('testingPaths', testingPaths);
+      // console.log('testingPaths', testingPaths);
 
       for (const path of testingPaths) {
         try {
-          console.log('testing path:', path);
+          // console.log('testing path:', path);
           const isExists = await this.yaResources.getFolderResources(path, {
             withParent: true,
           });
-          console.log('isExists', isExists);
+          // console.log('isExists', isExists);
 
           if (isExists.length === 0) {
             const creationResult = await this.createFolder(path);
@@ -204,7 +212,7 @@ export class YandexDiskClient {
             }
           }
         } catch (ex) {
-          console.log('catched exection:', ex);
+          // console.log('catched exection:', ex);
           const creationResult = await this.createFolder(path);
           if (!creationResult) {
             return false;

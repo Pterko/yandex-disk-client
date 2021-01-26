@@ -29,7 +29,7 @@ class YaAuth {
   }
 
   async YadPreAuthRequest(): Promise<{ csrf: string; uuid: string }> {
-    console.log('preauth');
+    // console.log('preauth');
 
     const result = await this.httpClient.get('https://passport.yandex.ru/auth');
 
@@ -54,7 +54,7 @@ class YaAuth {
   }
 
   async YadAuthLoginRequest(csrf: string, uuid: string) {
-    console.log('YadAuthLoginRequest');
+    // console.log('YadAuthLoginRequest');
 
     const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/multi_step/start',
@@ -81,13 +81,13 @@ class YaAuth {
       fs.writeFileSync('../logs/YadAuthLoginRequest.html', result.body);
     }
 
-    console.log(result.body);
+    // console.log(result.body);
 
     return JSON.parse(result.body);
   }
 
   async YadAuthPasswordRequest(csrf: string, trackId: string) {
-    console.log('YadAuthPasswordRequest');
+    // console.log('YadAuthPasswordRequest');
 
     const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/multi_step/commit_password',
@@ -103,13 +103,13 @@ class YaAuth {
       fs.writeFileSync('../logs/YadAuthPasswordRequest.html', result.body);
     }
 
-    console.log(result.body);
+    // console.log(result.body);
 
     return JSON.parse(result.body);
   }
 
   async YadAuthAccountsRequest(csrf: string) {
-    console.log('YadAuthAccountsRequest');
+    // console.log('YadAuthAccountsRequest');
 
     const result = await this.httpClient.post(
       'https://passport.yandex.ru/registration-validations/auth/accounts',
@@ -123,13 +123,13 @@ class YaAuth {
       fs.writeFileSync('../logs/YadAuthAccountsRequest.html', result.body);
     }
 
-    console.log(result.body);
+    // console.log(result.body);
 
     return JSON.parse(result.body);
   }
 
   async YadAuthDiskSkRequest() {
-    console.log('YadAuthDiskSkRequest');
+    // console.log('YadAuthDiskSkRequest');
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/client/disk',
@@ -148,7 +148,7 @@ class YaAuth {
     );
 
     if (result.statusCode >= 400) {
-      console.log(result.body);
+      // console.log(result.body);
       throw new Error('Something went wrong with YadAuthDiskSkRequest');
     }
 

@@ -26,12 +26,12 @@ class YaResourses {
     path: string,
     { withParent = false }: { withParent?: boolean } = {}
   ): Promise<Resource[]> {
-    console.log('getFolderInfo');
-    console.log('withParent', withParent);
+    // //console.log('getFolderInfo');
+    // //console.log('withParent', withParent);
 
     const proceededPath = processPath(path);
 
-    console.log('proceededPath', proceededPath);
+    //console.log('proceededPath', proceededPath);
 
     const result: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=resources',
@@ -51,11 +51,11 @@ class YaResourses {
       }
     );
 
-    console.log(result.body?.models[0]?.data);
+    //console.log(result.body?.models[0]?.data);
 
     // sometimes yandex ignores our `withParent` and still passes parent directory
     if (!withParent) {
-      // console.log('resources before filter', result.body?.models[0]?.data?.resources)
+      // //console.log('resources before filter', result.body?.models[0]?.data?.resources)
       return result.body?.models[0]?.data?.resources.filter((x: any) => {
         return x.path !== processPath(path) && x.id !== processPath(path);
       });
@@ -65,7 +65,7 @@ class YaResourses {
   }
 
   async getFileDownloadUrl(path: string) {
-    console.log('getFileDownloadUrl');
+    //console.log('getFileDownloadUrl');
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-get-resource-url',
@@ -82,7 +82,7 @@ class YaResourses {
 
     const resultBody: any = result.body;
 
-    console.log(result.body);
+    //console.log(result.body);
 
     if (resultBody?.models[0]?.data?.file) {
       return `https:${resultBody.models[0].data.file}`;
@@ -91,25 +91,32 @@ class YaResourses {
     throw new Error('File link not found');
   }
 
+  async uploadFileStream(
+    path: string,
+    stream: ReadableStream,
+  ): Promise<{ status: string; error?: any; resource?: Resource }> {
+
+  }
+
   async uploadFile(
     path: string,
     buffer: Buffer
   ): Promise<{ status: string; error?: any; resource?: Resource }> {
-    console.log('uploadFile');
+    //console.log('uploadFile');
 
     const calcMd5 = crypto
       .createHash('md5')
       .update(buffer)
       .digest('hex');
 
-    console.log('md5', calcMd5);
+    //console.log('md5', calcMd5);
 
     const calcSHA256 = crypto
       .createHash('sha256')
       .update(buffer)
       .digest('hex');
 
-    console.log('sha256', calcSHA256);
+    //console.log('sha256', calcSHA256);
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-get-resource-url',
@@ -128,7 +135,7 @@ class YaResourses {
       }
     );
 
-    console.log('first upload answer', result.body);
+    //console.log('first upload answer', result.body);
 
     const resultBody: any = result.body;
 
@@ -136,17 +143,17 @@ class YaResourses {
     const uploadStatus = resultBody?.models[0]?.data?.status;
 
     if (uploadStatus === 'hardlinked') {
-      console.log('Successful upload, this file was found on server');
+      //console.log('Successful upload, this file was found on server');
       return { status: 'hardlinked' };
     }
 
-    console.log('file wasnt presented on server, uploading it...');
+    //console.log('file wasnt presented on server, uploading it...');
     const uploadData = resultBody?.models[0];
 
-    console.log('uploadData:', uploadData);
+    //console.log('uploadData:', uploadData);
 
     if (uploadData?.data?.error) {
-      console.log('error body:', uploadData.data.error.body);
+      //console.log('error body:', uploadData.data.error.body);
       throw new Error(
         'Failed to upload file:' + JSON.stringify(uploadData.data.error)
       );
@@ -168,7 +175,7 @@ class YaResourses {
         }
       );
 
-      console.log('put:', putResult.statusCode);
+      //console.log('put:', putResult.statusCode);
 
       const verifyResult = await this.httpClient.post(
         'https://disk.yandex.ru/models/?_m=do-status-operation',
@@ -197,7 +204,7 @@ class YaResourses {
   }
 
   async createFolder(path: string): Promise<boolean> {
-    console.log('createFolder', path);
+    //console.log('createFolder', path);
 
     const createFolderResult = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-create-folder',
@@ -218,13 +225,13 @@ class YaResourses {
       }
     );
 
-    console.log(createFolderResult.body);
+    //console.log(createFolderResult.body);
 
     return true;
   }
 
   async deleteResource(path: string) {
-    console.log('deleteFile');
+    //console.log('deleteFile');
 
     const deleteFileResult = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-delete',
@@ -243,13 +250,13 @@ class YaResourses {
       }
     );
 
-    console.log(deleteFileResult.body);
+    //console.log(deleteFileResult.body);
 
     return true;
   }
 
   async cleanTrash() {
-    console.log('cleanTrash');
+    //console.log('cleanTrash');
 
     const deleteFileResult: any = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-clean-trash',
@@ -266,7 +273,7 @@ class YaResourses {
       }
     );
 
-    console.log(deleteFileResult.body);
+    //console.log(deleteFileResult.body);
 
     const operationId = deleteFileResult?.body?.models[0]?.data?.oid;
 
@@ -303,11 +310,11 @@ class YaResourses {
         currentOperationResult?.models[0]?.data?.status;
 
       if (!currentOperationStatus) {
-        console.log('Error happened:', currentOperationResult);
+        //console.log('Error happened:', currentOperationResult);
         return false;
       }
 
-      console.log('Current status: ', currentOperationStatus);
+      //console.log('Current status: ', currentOperationStatus);
 
       while (['EXECUTING', 'WAITING'].includes(currentOperationStatus)) {
         await wait(1000);
@@ -320,23 +327,23 @@ class YaResourses {
         currentOperationStatus =
           currentOperationResult?.models[0]?.data?.status;
 
-        console.log('Current status: ', currentOperationStatus);
+        //console.log('Current status: ', currentOperationStatus);
 
         if (!currentOperationStatus) {
-          console.log('Error happened:', currentOperationResult);
+          //console.log('Error happened:', currentOperationResult);
           return false;
         }
       }
 
       return true;
     } else {
-      console.log('Error happened: ', deleteFileResult);
+      //console.log('Error happened: ', deleteFileResult);
       return false;
     }
   }
 
   public async getQuota(): Promise<Quota> {
-    console.log('getQuota');
+    //console.log('getQuota');
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=space',
@@ -353,7 +360,7 @@ class YaResourses {
 
     const resultBody: any = result.body;
 
-    console.log(result.body);
+    //console.log(result.body);
 
     if (resultBody?.models[0]?.data) {
       return resultBody?.models[0]?.data;
@@ -371,7 +378,7 @@ class YaResourses {
     short_url_named: string;
     url: string;
   }> {
-    console.log('publishResource');
+    //console.log('publishResource');
 
     const result = await this.httpClient.post(
       'https://disk.yandex.ru/models/?_m=do-resource-publish',
@@ -391,7 +398,7 @@ class YaResourses {
 
     const resultBody: any = result.body;
 
-    console.log(result.body);
+    //console.log(result.body);
 
     if (resultBody?.models[0]?.data) {
       return resultBody?.models[0]?.data;
