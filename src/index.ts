@@ -169,14 +169,6 @@ export class YandexDiskClient {
     return this.yaResources.uploadFile(path, buffer);
   }
 
-  /** Used to upload buffer to yandex.disk */
-  public async uploadFileStream(
-    stream: ReadableStream,
-    path: string
-  ): Promise<{ status: string; resource?: Resource }> {
-    return this.yaResources.uploadFileStream(path, stream);
-  }
-
   /** Used to create a folder. Don't support recursive creation. */
   public async createFolder(
     path: string,

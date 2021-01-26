@@ -91,13 +91,6 @@ class YaResourses {
     throw new Error('File link not found');
   }
 
-  async uploadFileStream(
-    path: string,
-    stream: ReadableStream,
-  ): Promise<{ status: string; error?: any; resource?: Resource }> {
-
-  }
-
   async uploadFile(
     path: string,
     buffer: Buffer
